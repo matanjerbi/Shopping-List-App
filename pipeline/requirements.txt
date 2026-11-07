@@ -1,0 +1,5 @@
+il-supermarket-scraper==1.0.8
+lxml
+pywebpush==2.0.3
+cryptography
+requests

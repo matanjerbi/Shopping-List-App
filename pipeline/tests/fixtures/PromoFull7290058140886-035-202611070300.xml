@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Root><Promotions>
+<Promotion><PromotionId>1001</PromotionId><PromotionDescription>סוד מרכך 2 ב-25</PromotionDescription><PromotionStartDate>2026-11-01</PromotionStartDate><PromotionStartHour>00:00</PromotionStartHour><PromotionEndDate>2026-11-20</PromotionEndDate><PromotionEndHour>23:59</PromotionEndHour><RewardType>1</RewardType><MinQty>2</MinQty><DiscountedPrice>25</DiscountedPrice><DiscountedPricePerMipuy>12.5</DiscountedPricePerMipuy><Clubs><ClubId>0</ClubId></Clubs><PromotionItems><Item><ItemCode>7290011194246</ItemCode><IsGiftItem>0</IsGiftItem></Item></PromotionItems></Promotion>
+<Promotion><PromotionId>1002</PromotionId><PromotionDescription>במבה 3 ב-12 למועדון</PromotionDescription><PromotionEndDate>2026-12-01</PromotionEndDate><MinQty>3</MinQty><DiscountedPrice>12</DiscountedPrice><Clubs><ClubId>1</ClubId></Clubs><PromotionItems><Item><ItemCode>7290000000123</ItemCode></Item></PromotionItems></Promotion>
+<Promotion><PromotionId>1003</PromotionId><PromotionDescription>ישן</PromotionDescription><PromotionEndDate>2020-01-01</PromotionEndDate><DiscountedPrice>1</DiscountedPrice><PromotionItems><Item><ItemCode>7290004131074</ItemCode></Item></PromotionItems></Promotion>
+</Promotions></Root>

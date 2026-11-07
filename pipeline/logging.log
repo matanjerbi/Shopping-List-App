@@ -1,0 +1,39 @@
+Logger       2026-11-07 21:19:58,405 WARNING  [MainThread] logger.py:warning scraper CITY_MARKET_KIRYATGAT is not stable, pass_expiration_date: 2027-03-01, datetime.now(): 2026-11-07
+Logger       2026-11-07 21:19:58,405 WARNING  [MainThread] logger.py:warning scraper NETIV_HASED is not stable, pass_expiration_date: 2027-01-01, datetime.now(): 2026-11-07
+Logger       2026-11-07 21:19:58,405 INFO     [MainThread] logger.py:info Starting scrapper <class 'il_supermarket_scarper.scrappers.ramilevy.RamiLevy'>
+Logger       2026-11-07 21:19:58,405 INFO     [MainThread] logger.py:info Initialized RamiLevy scraper withoutput: disk:/tmp/tmptwr05ve4/tmpkgi2q8y0/RamiLevystatus database: <il_supermarket_scarper.utils.databases.json_file.JsonDataBase object at 0x7f9417d81550>file output: <il_supermarket_scarper.utils.file_output.DiskFileOutput object at 0x7f9417d81400>
+Logger       2026-11-07 21:19:58,405 INFO     [MainThread] logger.py:info scraping DumpFolderNames.RAMI_LEVY
+Logger       2026-11-07 21:19:58,405 INFO     [MainThread] logger.py:info [DumpFolderNames.RAMI_LEVY] Starting run #1
+Logger       2026-11-07 21:19:58,406 INFO     [MainThread] logger.py:info Open async connection to FTP server with url.retail.publishedprices.co.il , username: RamiLevi , password: 
+Logger       2026-11-07 21:19:58,412 ERROR    [MainThread] logger.py:error Error scraping: [Errno -2] Name or service not known
+Logger       2026-11-07 21:19:58,412 INFO     [MainThread] logger.py:info Found the following files in /tmp/tmptwr05ve4/tmpkgi2q8y0/RamiLevy
+Logger       2026-11-07 21:19:58,412 INFO     [MainThread] logger.py:info Folder /tmp/tmptwr05ve4/tmpkgi2q8y0/RamiLevy: Num of Files= 0,Size= 0 MB
+Logger       2026-11-07 21:19:58,413 INFO     [MainThread] logger.py:info [DumpFolderNames.RAMI_LEVY] Run #1 completed. Files found: 0, Total files: 0
+Logger       2026-11-07 21:19:58,413 INFO     [MainThread] logger.py:info [DumpFolderNames.RAMI_LEVY] Exiting loop: single pass completed
+Logger       2026-11-07 21:19:58,413 INFO     [MainThread] logger.py:info done scraping DumpFolderNames.RAMI_LEVY
+Logger       2026-11-07 21:19:58,416 WARNING  [MainThread] logger.py:warning scraper CITY_MARKET_KIRYATGAT is not stable, pass_expiration_date: 2027-03-01, datetime.now(): 2026-11-07
+Logger       2026-11-07 21:19:58,416 WARNING  [MainThread] logger.py:warning scraper NETIV_HASED is not stable, pass_expiration_date: 2027-01-01, datetime.now(): 2026-11-07
+Logger       2026-11-07 21:19:58,416 INFO     [MainThread] logger.py:info Starting scrapper <class 'il_supermarket_scarper.scrappers.ramilevy.RamiLevy'>
+Logger       2026-11-07 21:19:58,416 INFO     [MainThread] logger.py:info Initialized RamiLevy scraper withoutput: disk:/tmp/tmptwr05ve4/tmp63wt4s2l/RamiLevystatus database: <il_supermarket_scarper.utils.databases.json_file.JsonDataBase object at 0x7f9417d47110>file output: <il_supermarket_scarper.utils.file_output.DiskFileOutput object at 0x7f9417d47390>
+Logger       2026-11-07 21:19:58,416 INFO     [MainThread] logger.py:info scraping DumpFolderNames.RAMI_LEVY
+Logger       2026-11-07 21:19:58,416 INFO     [MainThread] logger.py:info [DumpFolderNames.RAMI_LEVY] Starting run #1
+Logger       2026-11-07 21:19:58,417 INFO     [MainThread] logger.py:info Open async connection to FTP server with url.retail.publishedprices.co.il , username: RamiLevi , password: 
+Logger       2026-11-07 21:19:58,418 ERROR    [MainThread] logger.py:error Error scraping: [Errno -2] Name or service not known
+Logger       2026-11-07 21:19:58,418 INFO     [MainThread] logger.py:info Found the following files in /tmp/tmptwr05ve4/tmp63wt4s2l/RamiLevy
+Logger       2026-11-07 21:19:58,418 INFO     [MainThread] logger.py:info Folder /tmp/tmptwr05ve4/tmp63wt4s2l/RamiLevy: Num of Files= 0,Size= 0 MB
+Logger       2026-11-07 21:19:58,419 INFO     [MainThread] logger.py:info [DumpFolderNames.RAMI_LEVY] Run #1 completed. Files found: 0, Total files: 0
+Logger       2026-11-07 21:19:58,419 INFO     [MainThread] logger.py:info [DumpFolderNames.RAMI_LEVY] Exiting loop: single pass completed
+Logger       2026-11-07 21:19:58,419 INFO     [MainThread] logger.py:info done scraping DumpFolderNames.RAMI_LEVY
+Logger       2026-11-07 21:19:58,420 WARNING  [MainThread] logger.py:warning scraper CITY_MARKET_KIRYATGAT is not stable, pass_expiration_date: 2027-03-01, datetime.now(): 2026-11-07
+Logger       2026-11-07 21:19:58,420 WARNING  [MainThread] logger.py:warning scraper NETIV_HASED is not stable, pass_expiration_date: 2027-01-01, datetime.now(): 2026-11-07
+Logger       2026-11-07 21:19:58,420 INFO     [MainThread] logger.py:info Starting scrapper <class 'il_supermarket_scarper.scrappers.ramilevy.RamiLevy'>
+Logger       2026-11-07 21:19:58,420 INFO     [MainThread] logger.py:info Initialized RamiLevy scraper withoutput: disk:/tmp/tmptwr05ve4/tmpsl4eh9nd/RamiLevystatus database: <il_supermarket_scarper.utils.databases.json_file.JsonDataBase object at 0x7f9417c54050>file output: <il_supermarket_scarper.utils.file_output.DiskFileOutput object at 0x7f9417d47750>
+Logger       2026-11-07 21:19:58,420 INFO     [MainThread] logger.py:info scraping DumpFolderNames.RAMI_LEVY
+Logger       2026-11-07 21:19:58,420 INFO     [MainThread] logger.py:info [DumpFolderNames.RAMI_LEVY] Starting run #1
+Logger       2026-11-07 21:19:58,421 INFO     [MainThread] logger.py:info Open async connection to FTP server with url.retail.publishedprices.co.il , username: RamiLevi , password: 
+Logger       2026-11-07 21:19:58,422 ERROR    [MainThread] logger.py:error Error scraping: [Errno -2] Name or service not known
+Logger       2026-11-07 21:19:58,422 INFO     [MainThread] logger.py:info Found the following files in /tmp/tmptwr05ve4/tmpsl4eh9nd/RamiLevy
+Logger       2026-11-07 21:19:58,422 INFO     [MainThread] logger.py:info Folder /tmp/tmptwr05ve4/tmpsl4eh9nd/RamiLevy: Num of Files= 0,Size= 0 MB
+Logger       2026-11-07 21:19:58,422 INFO     [MainThread] logger.py:info [DumpFolderNames.RAMI_LEVY] Run #1 completed. Files found: 0, Total files: 0
+Logger       2026-11-07 21:19:58,422 INFO     [MainThread] logger.py:info [DumpFolderNames.RAMI_LEVY] Exiting loop: single pass completed
+Logger       2026-11-07 21:19:58,422 INFO     [MainThread] logger.py:info done scraping DumpFolderNames.RAMI_LEVY

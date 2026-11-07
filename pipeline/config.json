@@ -1,0 +1,6 @@
+{
+  "cities": ["רמת גן", "גבעתיים", "בני ברק"],
+  "extraStores": [],
+  "skipChains": ["WOLT", "BAREKET", "GOOD_PHARM"],
+  "maxStoresPerChain": 40
+}

@@ -1,0 +1,10 @@
+name = "shopping-api"
+main = "src/index.js"
+compatibility_date = "2026-07-01"
+workers_dev = true
+
+[[d1_databases]]
+binding = "DB"
+database_name = "shopping-db"
+database_id = "187aeb74-077a-4138-b2b5-490a0fde4845"
+migrations_dir = "migrations"

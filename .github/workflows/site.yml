@@ -1,0 +1,190 @@
+name: Build & deploy
+
+on:
+  push:
+    branches: [main]
+  schedule:
+    - cron: "0 4 * * *"    # ~06:00 Israel — after chains publish the daily full price files
+    - cron: "0 14 * * *"   # ~16:00 Israel — afternoon promo updates
+  workflow_dispatch:
+    inputs:
+      refresh_data:
+        description: "Download fresh price data"
+        type: boolean
+        default: true
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+concurrency:
+  group: site
+  cancel-in-progress: false
+
+jobs:
+  api:
+    name: Backend (Cloudflare Worker)
+    runs-on: ubuntu-latest
+    outputs:
+      url: ${{ steps.url.outputs.url }}
+    env:
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check secrets
+        id: sec
+        run: |
+          if [ -z "$CLOUDFLARE_API_TOKEN" ] || [ -z "$CLOUDFLARE_ACCOUNT_ID" ]; then
+            echo "::warning::CLOUDFLARE_API_TOKEN / CLOUDFLARE_ACCOUNT_ID secrets are missing — shared lists and push notifications are disabled until they are added (Settings > Secrets and variables > Actions)"
+            echo "ok=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "ok=true" >> "$GITHUB_OUTPUT"
+          fi
+      - uses: actions/setup-node@v4
+        if: steps.sec.outputs.ok == 'true'
+        with:
+          node-version: 22
+      - name: Install & test worker
+        if: steps.sec.outputs.ok == 'true'
+        working-directory: worker
+        run: |
+          npm ci
+          npm test
+      - name: Make sure the account has a workers.dev subdomain
+        id: sub
+        if: steps.sec.outputs.ok == 'true'
+        run: |
+          api="https://api.cloudflare.com/client/v4/accounts/$CLOUDFLARE_ACCOUNT_ID/workers/subdomain"
+          sub=$(curl -s -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN" "$api" | jq -r '.result.subdomain // empty')
+          if [ -z "$sub" ]; then
+            sub="shop-$(echo $CLOUDFLARE_ACCOUNT_ID | cut -c1-8)"
+            curl -s -X PUT -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN" -H "Content-Type: application/json" \
+              -d "{\"subdomain\":\"$sub\"}" "$api" | jq -c '.success, .errors'
+          fi
+          echo "sub=$sub" >> "$GITHUB_OUTPUT"
+      - name: Deploy worker
+        if: steps.sec.outputs.ok == 'true' && github.event_name != 'schedule'
+        working-directory: worker
+        run: |
+          npx wrangler d1 migrations apply shopping-db --remote
+          npx wrangler deploy
+          node ../notify/keys.mjs pipelineToken | npx wrangler secret put PIPELINE_TOKEN
+      - id: url
+        if: steps.sec.outputs.ok == 'true'
+        run: echo "url=https://shopping-api.${{ steps.sub.outputs.sub }}.workers.dev" >> "$GITHUB_OUTPUT"
+
+  site:
+    name: Data + web app (GitHub Pages)
+    needs: api
+    if: always()
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    env:
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      API_URL: ${{ needs.api.outputs.url }}
+    steps:
+      - uses: actions/checkout@v4
+      - id: pages
+        uses: actions/configure-pages@v5
+        with:
+          enablement: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Test pipeline & engine
+        run: |
+          pip install -q -r pipeline/requirements.txt
+          python pipeline/tests/test_pipeline.py
+          (cd web && npm test)
+
+      - name: Decide whether to refresh data
+        id: plan
+        env:
+          BASE: ${{ steps.pages.outputs.base_url }}
+        run: |
+          refresh=false
+          if [ "${{ github.event_name }}" = "schedule" ]; then refresh=true; fi
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ] && [ "${{ inputs.refresh_data }}" = "true" ]; then refresh=true; fi
+          mkdir -p prev
+          if ! python pipeline/fetch_live.py "$BASE" prev; then refresh=true; fi
+          echo "refresh=$refresh" >> "$GITHUB_OUTPUT"
+          echo "refresh=$refresh"
+
+      - name: Restore pipeline state (price history)
+        if: steps.plan.outputs.refresh == 'true'
+        run: |
+          if git fetch --depth 1 origin data 2>/dev/null; then
+            mkdir -p prev/state
+            git archive FETCH_HEAD state | tar -x -C prev || true
+          fi
+          ls -la prev/state 2>/dev/null || echo "no previous state"
+
+      - name: Download & process price files
+        if: steps.plan.outputs.refresh == 'true'
+        env:
+          DISABLED_SCRAPPERS: ""
+        run: |
+          set -o pipefail
+          python pipeline/run.py --prev prev --out out --procs 8 --chain-timeout 4200 2>&1 | grep -v "DEBUG" | tee pipeline.log
+          tail -c 3000000 pipeline.log > out/pipeline.log
+
+      - name: Send push notifications
+        if: steps.plan.outputs.refresh == 'true' && env.API_URL != ''
+        env:
+          DATA_DIR: out
+          SITE_URL: ${{ steps.pages.outputs.base_url }}/
+        run: |
+          cd notify && npm ci --no-audit --no-fund && cd ..
+          node notify/notify.mjs
+
+      - name: Save pipeline state to the data branch
+        if: steps.plan.outputs.refresh == 'true'
+        run: |
+          rm -rf /tmp/statebr && mkdir -p /tmp/statebr && cp -r out/state /tmp/statebr/state
+          cp out/status.json /tmp/statebr/ 2>/dev/null || true
+          cd /tmp/statebr
+          git init -q -b data
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -q -m "pipeline state $(date -u +%F)"
+          git push -f "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git" data:data
+
+      - name: Use live data (no refresh)
+        if: steps.plan.outputs.refresh != 'true'
+        run: rm -rf out && cp -r prev out
+
+      - name: Assemble site
+        env:
+          BASE: ${{ steps.pages.outputs.base_url }}
+        run: |
+          rm -rf _site && mkdir _site
+          cp -r web/index.html web/manifest.webmanifest web/sw.js web/css web/js web/vendor web/icons _site/
+          mkdir -p _site/data
+          cp -r out/. _site/data/
+          rm -rf _site/data/state
+          sed -i "s/__BUILD__/${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}/" _site/sw.js
+          VAPID=$(node notify/keys.mjs vapidPublic || true)
+          printf '{"apiUrl":"%s","vapidPublicKey":"%s","build":"%s"}' "$API_URL" "$VAPID" "$GITHUB_RUN_ID" > _site/config.json
+          cat _site/config.json; echo
+          touch _site/.nojekyll
+          du -sh _site _site/data
+          echo "stores: $(ls _site/data/s | wc -l)"
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+      - id: deploy
+        uses: actions/deploy-pages@v4
+
+      - name: Publish build log on failure
+        if: failure()
+        run: echo "see logs"

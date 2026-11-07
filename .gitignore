@@ -1,0 +1,7 @@
+node_modules/
+__pycache__/
+.wrangler/
+out/
+prev/
+_site/
+pipeline.log

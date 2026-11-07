@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Root><ChainId>7290058140886</ChainId><StoreId>035</StoreId><Items>
+<Item><ItemCode>7290000066318</ItemCode><ItemName>מרכך כביסה בדין 4 ליטר</ItemName><ManufacturerName>סנו</ManufacturerName><UnitQty>ליטר</UnitQty><Quantity>4.00</Quantity><UnitOfMeasure>ליטר</UnitOfMeasure><bIsWeighted>0</bIsWeighted><ItemPrice>32.90</ItemPrice></Item>
+<Item><ItemCode>7290011194246</ItemCode><ItemName>סוד מרכך כביסה מרוכז 3 ל'</ItemName><ManufacturerName>שטראוס</ManufacturerName><Quantity>3</Quantity><UnitOfMeasure>ליטר</UnitOfMeasure><bIsWeighted>0</bIsWeighted><ItemPrice>19.90</ItemPrice></Item>
+<Item><ItemCode>7290004131074</ItemCode><ItemName>חלב 3% בקרטון 1 ליטר</ItemName><Quantity>1000</Quantity><UnitOfMeasure>מיליליטר</UnitOfMeasure><bIsWeighted>0</bIsWeighted><ItemPrice>7.12</ItemPrice></Item>
+<Item><ItemCode>7290000000123</ItemCode><ItemName>במבה 80 גרם</ItemName><Quantity>0</Quantity><UnitOfMeasure>לא ידוע</UnitOfMeasure><bIsWeighted>0</bIsWeighted><ItemPrice>5.90</ItemPrice></Item>
+<Item><ItemCode>1234</ItemCode><ItemName>עגבניות</ItemName><Quantity>1</Quantity><UnitOfMeasure>קילוגרם</UnitOfMeasure><bIsWeighted>1</bIsWeighted><ItemPrice>6.90</ItemPrice></Item>
+</Items></Root>
