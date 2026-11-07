@@ -160,7 +160,7 @@ jobs:
       - name: Save pipeline state to the data branch
         if: steps.plan.outputs.refresh == 'true'
         run: |
-          rm -rf /tmp/statebr && mkdir -p /tmp/statebr && cp -r out/state /tmp/statebr/state
+          rm -rf /tmp/statebr && mkdir -p /tmp/statebr out/state && cp -r out/state /tmp/statebr/state
           cp out/status.json out/stores.json out/pipeline.log /tmp/statebr/ 2>/dev/null || true
           cd /tmp/statebr
           git init -q -b data

@@ -109,6 +109,7 @@ def _latest_by_type(files: list[str], kind: str) -> str | None:
 def process_chain(chain: str, cities: list[str], extra_stores: list[str], workdir: str, max_stores: int):
     t0 = time.time()
     result = {"chain": chain, "ok": False, "stores": [], "error": "", "seconds": 0}
+    os.makedirs(workdir, exist_ok=True)
     try:
         store_files = _download(chain, ["STORE_FILE"], workdir=workdir)
         f = _latest_by_type(store_files, "store")

@@ -37,3 +37,243 @@ Logger       2026-11-07 21:19:58,422 INFO     [MainThread] logger.py:info Folder
 Logger       2026-11-07 21:19:58,422 INFO     [MainThread] logger.py:info [DumpFolderNames.RAMI_LEVY] Run #1 completed. Files found: 0, Total files: 0
 Logger       2026-11-07 21:19:58,422 INFO     [MainThread] logger.py:info [DumpFolderNames.RAMI_LEVY] Exiting loop: single pass completed
 Logger       2026-11-07 21:19:58,422 INFO     [MainThread] logger.py:info done scraping DumpFolderNames.RAMI_LEVY
+Logger       2026-11-07 21:49:49,895 WARNING  [MainThread] logger.py:warning scraper CITY_MARKET_KIRYATGAT is not stable, pass_expiration_date: 2027-03-01, datetime.now(): 2026-11-07
+Logger       2026-11-07 21:49:49,895 WARNING  [MainThread] logger.py:warning scraper NETIV_HASED is not stable, pass_expiration_date: 2027-01-01, datetime.now(): 2026-11-07
+Logger       2026-11-07 21:49:49,895 INFO     [MainThread] logger.py:info Starting scrapper <class 'il_supermarket_scarper.scrappers.shufersal.Shufersal'>
+Logger       2026-11-07 21:49:49,895 INFO     [MainThread] logger.py:info Initialized Shufersal scraper withoutput: disk:/tmp/nonexist/x/SHUFERSAL/tmp7p4nfsmn/Shufersalstatus database: <il_supermarket_scarper.utils.databases.json_file.JsonDataBase object at 0x7f93b44916a0>file output: <il_supermarket_scarper.utils.file_output.DiskFileOutput object at 0x7f93b4491550>
+Logger       2026-11-07 21:49:49,896 INFO     [MainThread] logger.py:info scraping DumpFolderNames.SHUFERSAL
+Logger       2026-11-07 21:49:49,896 INFO     [MainThread] logger.py:info [DumpFolderNames.SHUFERSAL] Starting run #1
+Logger       2026-11-07 21:49:49,898 DEBUG    [asyncio_0] logger.py:debug Didn't find cookie file
+Logger       2026-11-07 21:49:49,898 DEBUG    [asyncio_0] logger.py:debug On a new Session requesting url: method=GET, url=https://prices.shufersal.co.il//FileObject/UpdateCategory?catID=5, body=None
+Logger       2026-11-07 21:49:50,152 WARNING  [asyncio_0] logger.py:warning ProxyError: HTTPSConnectionPool(host='prices.shufersal.co.il', port=443): Max retries exceeded with url: //FileObject/UpdateCategory?catID=5 (Caused by ProxyError('Unable to connect to proxy', OSError('Tunnel con... (timeout=60, measured=0.254179, retries_left=3, retrying in 2 seconds)
+Logger       2026-11-07 21:49:52,152 DEBUG    [asyncio_0] logger.py:debug Didn't find cookie file
+Logger       2026-11-07 21:49:52,152 DEBUG    [asyncio_0] logger.py:debug On a new Session requesting url: method=GET, url=https://prices.shufersal.co.il//FileObject/UpdateCategory?catID=5, body=None
+Logger       2026-11-07 21:49:52,410 WARNING  [asyncio_0] logger.py:warning ProxyError: HTTPSConnectionPool(host='prices.shufersal.co.il', port=443): Max retries exceeded with url: //FileObject/UpdateCategory?catID=5 (Caused by ProxyError('Unable to connect to proxy', OSError('Tunnel con... (timeout=70, measured=0.258071, retries_left=2, retrying in 4 seconds)
+Logger       2026-11-07 21:49:56,411 DEBUG    [asyncio_0] logger.py:debug Didn't find cookie file
+Logger       2026-11-07 21:49:56,411 DEBUG    [asyncio_0] logger.py:debug On a new Session requesting url: method=GET, url=https://prices.shufersal.co.il//FileObject/UpdateCategory?catID=5, body=None
+Logger       2026-11-07 21:49:56,663 WARNING  [asyncio_0] logger.py:warning ProxyError: HTTPSConnectionPool(host='prices.shufersal.co.il', port=443): Max retries exceeded with url: //FileObject/UpdateCategory?catID=5 (Caused by ProxyError('Unable to connect to proxy', OSError('Tunnel con... (timeout=80, measured=0.252502, retries_left=1, retrying in 8 seconds)
+Logger       2026-11-07 21:50:04,664 DEBUG    [asyncio_0] logger.py:debug Didn't find cookie file
+Logger       2026-11-07 21:50:04,664 DEBUG    [asyncio_0] logger.py:debug On a new Session requesting url: method=GET, url=https://prices.shufersal.co.il//FileObject/UpdateCategory?catID=5, body=None
+Logger       2026-11-07 21:50:04,949 WARNING  [asyncio_0] logger.py:warning ProxyError: HTTPSConnectionPool(host='prices.shufersal.co.il', port=443): Max retries exceeded with url: //FileObject/UpdateCategory?catID=5 (Caused by ProxyError('Unable to connect to proxy', OSError('Tunnel con... (timeout=90, measured=0.285258, retries_left=0, retrying in 16 seconds)
+Logger       2026-11-07 21:50:04,949 ERROR    [asyncio_0] logger.py:error_execption got an execption:
+Traceback (most recent call last):
+  File "/root/.local/lib/python3.13/site-packages/urllib3/connectionpool.py", line 779, in urlopen
+    self._prepare_proxy(conn)
+    ~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "/root/.local/lib/python3.13/site-packages/urllib3/connectionpool.py", line 1074, in _prepare_proxy
+    conn.connect()
+    ~~~~~~~~~~~~^^
+  File "/root/.local/lib/python3.13/site-packages/urllib3/connection.py", line 844, in connect
+    self._tunnel()
+    ~~~~~~~~~~~~^^
+  File "/usr/local/lib/python3.13/http/client.py", line 1029, in _tunnel
+    raise OSError(f"Tunnel connection failed: {code} {message.strip()}")
+OSError: Tunnel connection failed: 403 Forbidden
+
+The above exception was the direct cause of the following exception:
+
+urllib3.exceptions.ProxyError: ('Unable to connect to proxy', OSError('Tunnel connection failed: 403 Forbidden'))
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/root/.local/lib/python3.13/site-packages/requests/adapters.py", line 696, in send
+    resp = conn.urlopen(
+        method=request.method,
+    ...<9 lines>...
+        chunked=chunked,
+    )
+  File "/root/.local/lib/python3.13/site-packages/urllib3/connectionpool.py", line 847, in urlopen
+    retries = retries.increment(
+        method, url, error=new_e, _pool=self, _stacktrace=sys.exc_info()[2]
+    )
+  File "/root/.local/lib/python3.13/site-packages/urllib3/util/retry.py", line 555, in increment
+    raise MaxRetryError(_pool, url, reason) from reason  # type: ignore[arg-type]
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+urllib3.exceptions.MaxRetryError: HTTPSConnectionPool(host='prices.shufersal.co.il', port=443): Max retries exceeded with url: //FileObject/UpdateCategory?catID=5 (Caused by ProxyError('Unable to connect to proxy', OSError('Tunnel connection failed: 403 Forbidden')))
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.13/site-packages/il_supermarket_scarper/utils/retry.py", line 70, in __retry_internal
+    return func(timeout=_timeout)
+  File "/usr/local/lib/python3.13/site-packages/il_supermarket_scarper/utils/connection.py", line 111, in retry_decorated_func
+    return func(*args, **kwargs)
+  File "/usr/local/lib/python3.13/site-packages/il_supermarket_scarper/utils/connection.py", line 307, in session_with_cookies
+    response_content = session.get(url, timeout=timeout, headers=headers)
+  File "/root/.local/lib/python3.13/site-packages/requests/sessions.py", line 671, in get
+    return self.request("GET", url, params=params, **kwargs)
+           ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.local/lib/python3.13/site-packages/requests/sessions.py", line 651, in request
+    resp = self.send(prep, **send_kwargs)
+  File "/root/.local/lib/python3.13/site-packages/requests/sessions.py", line 784, in send
+    r = adapter.send(request, **kwargs)
+  File "/root/.local/lib/python3.13/site-packages/requests/adapters.py", line 723, in send
+    raise ProxyError(e, request=request)
+requests.exceptions.ProxyError: HTTPSConnectionPool(host='prices.shufersal.co.il', port=443): Max retries exceeded with url: //FileObject/UpdateCategory?catID=5 (Caused by ProxyError('Unable to connect to proxy', OSError('Tunnel connection failed: 403 Forbidden')))
+Logger       2026-11-07 21:50:04,954 ERROR    [MainThread] logger.py:error Error scraping: HTTPSConnectionPool(host='prices.shufersal.co.il', port=443): Max retries exceeded with url: //FileObject/UpdateCategory?catID=5 (Caused by ProxyError('Unable to connect to proxy', OSError('Tunnel connection failed: 403 Forbidden')))
+Logger       2026-11-07 21:50:04,954 INFO     [MainThread] logger.py:info Found the following files in /tmp/nonexist/x/SHUFERSAL/tmp7p4nfsmn/Shufersal
+Logger       2026-11-07 21:50:04,954 INFO     [MainThread] logger.py:info Folder /tmp/nonexist/x/SHUFERSAL/tmp7p4nfsmn/Shufersal: Num of Files= 0,Size= 0 MB
+Logger       2026-11-07 21:50:04,955 INFO     [MainThread] logger.py:info [DumpFolderNames.SHUFERSAL] Run #1 completed. Files found: 0, Total files: 0
+Logger       2026-11-07 21:50:04,955 INFO     [MainThread] logger.py:info [DumpFolderNames.SHUFERSAL] Exiting loop: single pass completed
+Logger       2026-11-07 21:50:04,955 INFO     [MainThread] logger.py:info done scraping DumpFolderNames.SHUFERSAL
+Logger       2026-11-07 21:50:04,958 WARNING  [MainThread] logger.py:warning scraper CITY_MARKET_KIRYATGAT is not stable, pass_expiration_date: 2027-03-01, datetime.now(): 2026-11-07
+Logger       2026-11-07 21:50:04,958 WARNING  [MainThread] logger.py:warning scraper NETIV_HASED is not stable, pass_expiration_date: 2027-01-01, datetime.now(): 2026-11-07
+Logger       2026-11-07 21:50:04,958 INFO     [MainThread] logger.py:info Starting scrapper <class 'il_supermarket_scarper.scrappers.shufersal.Shufersal'>
+Logger       2026-11-07 21:50:04,958 INFO     [MainThread] logger.py:info Initialized Shufersal scraper withoutput: disk:/tmp/nonexist/x/SHUFERSAL/tmpqp07koss/Shufersalstatus database: <il_supermarket_scarper.utils.databases.json_file.JsonDataBase object at 0x7f93b445b110>file output: <il_supermarket_scarper.utils.file_output.DiskFileOutput object at 0x7f93b445afd0>
+Logger       2026-11-07 21:50:04,958 INFO     [MainThread] logger.py:info scraping DumpFolderNames.SHUFERSAL
+Logger       2026-11-07 21:50:04,958 INFO     [MainThread] logger.py:info [DumpFolderNames.SHUFERSAL] Starting run #1
+Logger       2026-11-07 21:50:04,959 DEBUG    [asyncio_0] logger.py:debug Didn't find cookie file
+Logger       2026-11-07 21:50:04,959 DEBUG    [asyncio_0] logger.py:debug On a new Session requesting url: method=GET, url=https://prices.shufersal.co.il//FileObject/UpdateCategory?catID=5, body=None
+Logger       2026-11-07 21:50:05,216 WARNING  [asyncio_0] logger.py:warning ProxyError: HTTPSConnectionPool(host='prices.shufersal.co.il', port=443): Max retries exceeded with url: //FileObject/UpdateCategory?catID=5 (Caused by ProxyError('Unable to connect to proxy', OSError('Tunnel con... (timeout=60, measured=0.257112, retries_left=3, retrying in 2 seconds)
+Logger       2026-11-07 21:50:07,217 DEBUG    [asyncio_0] logger.py:debug Didn't find cookie file
+Logger       2026-11-07 21:50:07,217 DEBUG    [asyncio_0] logger.py:debug On a new Session requesting url: method=GET, url=https://prices.shufersal.co.il//FileObject/UpdateCategory?catID=5, body=None
+Logger       2026-11-07 21:50:07,459 WARNING  [asyncio_0] logger.py:warning ProxyError: HTTPSConnectionPool(host='prices.shufersal.co.il', port=443): Max retries exceeded with url: //FileObject/UpdateCategory?catID=5 (Caused by ProxyError('Unable to connect to proxy', OSError('Tunnel con... (timeout=70, measured=0.242684, retries_left=2, retrying in 4 seconds)
+Logger       2026-11-07 21:50:11,460 DEBUG    [asyncio_0] logger.py:debug Didn't find cookie file
+Logger       2026-11-07 21:50:11,460 DEBUG    [asyncio_0] logger.py:debug On a new Session requesting url: method=GET, url=https://prices.shufersal.co.il//FileObject/UpdateCategory?catID=5, body=None
+Logger       2026-11-07 21:50:11,704 WARNING  [asyncio_0] logger.py:warning ProxyError: HTTPSConnectionPool(host='prices.shufersal.co.il', port=443): Max retries exceeded with url: //FileObject/UpdateCategory?catID=5 (Caused by ProxyError('Unable to connect to proxy', OSError('Tunnel con... (timeout=80, measured=0.244145, retries_left=1, retrying in 8 seconds)
+Logger       2026-11-07 21:50:19,704 DEBUG    [asyncio_0] logger.py:debug Didn't find cookie file
+Logger       2026-11-07 21:50:19,704 DEBUG    [asyncio_0] logger.py:debug On a new Session requesting url: method=GET, url=https://prices.shufersal.co.il//FileObject/UpdateCategory?catID=5, body=None
+Logger       2026-11-07 21:50:19,938 WARNING  [asyncio_0] logger.py:warning ProxyError: HTTPSConnectionPool(host='prices.shufersal.co.il', port=443): Max retries exceeded with url: //FileObject/UpdateCategory?catID=5 (Caused by ProxyError('Unable to connect to proxy', OSError('Tunnel con... (timeout=90, measured=0.234126, retries_left=0, retrying in 16 seconds)
+Logger       2026-11-07 21:50:19,938 ERROR    [asyncio_0] logger.py:error_execption got an execption:
+Traceback (most recent call last):
+  File "/root/.local/lib/python3.13/site-packages/urllib3/connectionpool.py", line 779, in urlopen
+    self._prepare_proxy(conn)
+    ~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "/root/.local/lib/python3.13/site-packages/urllib3/connectionpool.py", line 1074, in _prepare_proxy
+    conn.connect()
+    ~~~~~~~~~~~~^^
+  File "/root/.local/lib/python3.13/site-packages/urllib3/connection.py", line 844, in connect
+    self._tunnel()
+    ~~~~~~~~~~~~^^
+  File "/usr/local/lib/python3.13/http/client.py", line 1029, in _tunnel
+    raise OSError(f"Tunnel connection failed: {code} {message.strip()}")
+OSError: Tunnel connection failed: 403 Forbidden
+
+The above exception was the direct cause of the following exception:
+
+urllib3.exceptions.ProxyError: ('Unable to connect to proxy', OSError('Tunnel connection failed: 403 Forbidden'))
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/root/.local/lib/python3.13/site-packages/requests/adapters.py", line 696, in send
+    resp = conn.urlopen(
+        method=request.method,
+    ...<9 lines>...
+        chunked=chunked,
+    )
+  File "/root/.local/lib/python3.13/site-packages/urllib3/connectionpool.py", line 847, in urlopen
+    retries = retries.increment(
+        method, url, error=new_e, _pool=self, _stacktrace=sys.exc_info()[2]
+    )
+  File "/root/.local/lib/python3.13/site-packages/urllib3/util/retry.py", line 555, in increment
+    raise MaxRetryError(_pool, url, reason) from reason  # type: ignore[arg-type]
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+urllib3.exceptions.MaxRetryError: HTTPSConnectionPool(host='prices.shufersal.co.il', port=443): Max retries exceeded with url: //FileObject/UpdateCategory?catID=5 (Caused by ProxyError('Unable to connect to proxy', OSError('Tunnel connection failed: 403 Forbidden')))
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.13/site-packages/il_supermarket_scarper/utils/retry.py", line 70, in __retry_internal
+    return func(timeout=_timeout)
+  File "/usr/local/lib/python3.13/site-packages/il_supermarket_scarper/utils/connection.py", line 111, in retry_decorated_func
+    return func(*args, **kwargs)
+  File "/usr/local/lib/python3.13/site-packages/il_supermarket_scarper/utils/connection.py", line 307, in session_with_cookies
+    response_content = session.get(url, timeout=timeout, headers=headers)
+  File "/root/.local/lib/python3.13/site-packages/requests/sessions.py", line 671, in get
+    return self.request("GET", url, params=params, **kwargs)
+           ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.local/lib/python3.13/site-packages/requests/sessions.py", line 651, in request
+    resp = self.send(prep, **send_kwargs)
+  File "/root/.local/lib/python3.13/site-packages/requests/sessions.py", line 784, in send
+    r = adapter.send(request, **kwargs)
+  File "/root/.local/lib/python3.13/site-packages/requests/adapters.py", line 723, in send
+    raise ProxyError(e, request=request)
+requests.exceptions.ProxyError: HTTPSConnectionPool(host='prices.shufersal.co.il', port=443): Max retries exceeded with url: //FileObject/UpdateCategory?catID=5 (Caused by ProxyError('Unable to connect to proxy', OSError('Tunnel connection failed: 403 Forbidden')))
+Logger       2026-11-07 21:50:19,940 ERROR    [MainThread] logger.py:error Error scraping: HTTPSConnectionPool(host='prices.shufersal.co.il', port=443): Max retries exceeded with url: //FileObject/UpdateCategory?catID=5 (Caused by ProxyError('Unable to connect to proxy', OSError('Tunnel connection failed: 403 Forbidden')))
+Logger       2026-11-07 21:50:19,941 INFO     [MainThread] logger.py:info Found the following files in /tmp/nonexist/x/SHUFERSAL/tmpqp07koss/Shufersal
+Logger       2026-11-07 21:50:19,941 INFO     [MainThread] logger.py:info Folder /tmp/nonexist/x/SHUFERSAL/tmpqp07koss/Shufersal: Num of Files= 0,Size= 0 MB
+Logger       2026-11-07 21:50:19,942 INFO     [MainThread] logger.py:info [DumpFolderNames.SHUFERSAL] Run #1 completed. Files found: 0, Total files: 0
+Logger       2026-11-07 21:50:19,942 INFO     [MainThread] logger.py:info [DumpFolderNames.SHUFERSAL] Exiting loop: single pass completed
+Logger       2026-11-07 21:50:19,942 INFO     [MainThread] logger.py:info done scraping DumpFolderNames.SHUFERSAL
+Logger       2026-11-07 21:50:19,943 WARNING  [MainThread] logger.py:warning scraper CITY_MARKET_KIRYATGAT is not stable, pass_expiration_date: 2027-03-01, datetime.now(): 2026-11-07
+Logger       2026-11-07 21:50:19,943 WARNING  [MainThread] logger.py:warning scraper NETIV_HASED is not stable, pass_expiration_date: 2027-01-01, datetime.now(): 2026-11-07
+Logger       2026-11-07 21:50:19,943 INFO     [MainThread] logger.py:info Starting scrapper <class 'il_supermarket_scarper.scrappers.shufersal.Shufersal'>
+Logger       2026-11-07 21:50:19,944 INFO     [MainThread] logger.py:info Initialized Shufersal scraper withoutput: disk:/tmp/nonexist/x/SHUFERSAL/tmp0fj4h0rv/Shufersalstatus database: <il_supermarket_scarper.utils.databases.json_file.JsonDataBase object at 0x7f93b433ae90>file output: <il_supermarket_scarper.utils.file_output.DiskFileOutput object at 0x7f93b433a990>
+Logger       2026-11-07 21:50:19,944 INFO     [MainThread] logger.py:info scraping DumpFolderNames.SHUFERSAL
+Logger       2026-11-07 21:50:19,944 INFO     [MainThread] logger.py:info [DumpFolderNames.SHUFERSAL] Starting run #1
+Logger       2026-11-07 21:50:19,945 DEBUG    [asyncio_0] logger.py:debug Didn't find cookie file
+Logger       2026-11-07 21:50:19,945 DEBUG    [asyncio_0] logger.py:debug On a new Session requesting url: method=GET, url=https://prices.shufersal.co.il//FileObject/UpdateCategory?catID=5, body=None
+Logger       2026-11-07 21:50:20,207 WARNING  [asyncio_0] logger.py:warning ProxyError: HTTPSConnectionPool(host='prices.shufersal.co.il', port=443): Max retries exceeded with url: //FileObject/UpdateCategory?catID=5 (Caused by ProxyError('Unable to connect to proxy', OSError('Tunnel con... (timeout=60, measured=0.262745, retries_left=3, retrying in 2 seconds)
+Logger       2026-11-07 21:50:22,208 DEBUG    [asyncio_0] logger.py:debug Didn't find cookie file
+Logger       2026-11-07 21:50:22,208 DEBUG    [asyncio_0] logger.py:debug On a new Session requesting url: method=GET, url=https://prices.shufersal.co.il//FileObject/UpdateCategory?catID=5, body=None
+Logger       2026-11-07 21:50:22,456 WARNING  [asyncio_0] logger.py:warning ProxyError: HTTPSConnectionPool(host='prices.shufersal.co.il', port=443): Max retries exceeded with url: //FileObject/UpdateCategory?catID=5 (Caused by ProxyError('Unable to connect to proxy', OSError('Tunnel con... (timeout=70, measured=0.248674, retries_left=2, retrying in 4 seconds)
+Logger       2026-11-07 21:50:26,457 DEBUG    [asyncio_0] logger.py:debug Didn't find cookie file
+Logger       2026-11-07 21:50:26,457 DEBUG    [asyncio_0] logger.py:debug On a new Session requesting url: method=GET, url=https://prices.shufersal.co.il//FileObject/UpdateCategory?catID=5, body=None
+Logger       2026-11-07 21:50:26,708 WARNING  [asyncio_0] logger.py:warning ProxyError: HTTPSConnectionPool(host='prices.shufersal.co.il', port=443): Max retries exceeded with url: //FileObject/UpdateCategory?catID=5 (Caused by ProxyError('Unable to connect to proxy', OSError('Tunnel con... (timeout=80, measured=0.251146, retries_left=1, retrying in 8 seconds)
+Logger       2026-11-07 21:50:34,709 DEBUG    [asyncio_0] logger.py:debug Didn't find cookie file
+Logger       2026-11-07 21:50:34,709 DEBUG    [asyncio_0] logger.py:debug On a new Session requesting url: method=GET, url=https://prices.shufersal.co.il//FileObject/UpdateCategory?catID=5, body=None
+Logger       2026-11-07 21:50:34,970 WARNING  [asyncio_0] logger.py:warning ProxyError: HTTPSConnectionPool(host='prices.shufersal.co.il', port=443): Max retries exceeded with url: //FileObject/UpdateCategory?catID=5 (Caused by ProxyError('Unable to connect to proxy', OSError('Tunnel con... (timeout=90, measured=0.261284, retries_left=0, retrying in 16 seconds)
+Logger       2026-11-07 21:50:34,970 ERROR    [asyncio_0] logger.py:error_execption got an execption:
+Traceback (most recent call last):
+  File "/root/.local/lib/python3.13/site-packages/urllib3/connectionpool.py", line 779, in urlopen
+    self._prepare_proxy(conn)
+    ~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "/root/.local/lib/python3.13/site-packages/urllib3/connectionpool.py", line 1074, in _prepare_proxy
+    conn.connect()
+    ~~~~~~~~~~~~^^
+  File "/root/.local/lib/python3.13/site-packages/urllib3/connection.py", line 844, in connect
+    self._tunnel()
+    ~~~~~~~~~~~~^^
+  File "/usr/local/lib/python3.13/http/client.py", line 1029, in _tunnel
+    raise OSError(f"Tunnel connection failed: {code} {message.strip()}")
+OSError: Tunnel connection failed: 403 Forbidden
+
+The above exception was the direct cause of the following exception:
+
+urllib3.exceptions.ProxyError: ('Unable to connect to proxy', OSError('Tunnel connection failed: 403 Forbidden'))
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/root/.local/lib/python3.13/site-packages/requests/adapters.py", line 696, in send
+    resp = conn.urlopen(
+        method=request.method,
+    ...<9 lines>...
+        chunked=chunked,
+    )
+  File "/root/.local/lib/python3.13/site-packages/urllib3/connectionpool.py", line 847, in urlopen
+    retries = retries.increment(
+        method, url, error=new_e, _pool=self, _stacktrace=sys.exc_info()[2]
+    )
+  File "/root/.local/lib/python3.13/site-packages/urllib3/util/retry.py", line 555, in increment
+    raise MaxRetryError(_pool, url, reason) from reason  # type: ignore[arg-type]
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+urllib3.exceptions.MaxRetryError: HTTPSConnectionPool(host='prices.shufersal.co.il', port=443): Max retries exceeded with url: //FileObject/UpdateCategory?catID=5 (Caused by ProxyError('Unable to connect to proxy', OSError('Tunnel connection failed: 403 Forbidden')))
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.13/site-packages/il_supermarket_scarper/utils/retry.py", line 70, in __retry_internal
+    return func(timeout=_timeout)
+  File "/usr/local/lib/python3.13/site-packages/il_supermarket_scarper/utils/connection.py", line 111, in retry_decorated_func
+    return func(*args, **kwargs)
+  File "/usr/local/lib/python3.13/site-packages/il_supermarket_scarper/utils/connection.py", line 307, in session_with_cookies
+    response_content = session.get(url, timeout=timeout, headers=headers)
+  File "/root/.local/lib/python3.13/site-packages/requests/sessions.py", line 671, in get
+    return self.request("GET", url, params=params, **kwargs)
+           ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.local/lib/python3.13/site-packages/requests/sessions.py", line 651, in request
+    resp = self.send(prep, **send_kwargs)
+  File "/root/.local/lib/python3.13/site-packages/requests/sessions.py", line 784, in send
+    r = adapter.send(request, **kwargs)
+  File "/root/.local/lib/python3.13/site-packages/requests/adapters.py", line 723, in send
+    raise ProxyError(e, request=request)
+requests.exceptions.ProxyError: HTTPSConnectionPool(host='prices.shufersal.co.il', port=443): Max retries exceeded with url: //FileObject/UpdateCategory?catID=5 (Caused by ProxyError('Unable to connect to proxy', OSError('Tunnel connection failed: 403 Forbidden')))
+Logger       2026-11-07 21:50:34,972 ERROR    [MainThread] logger.py:error Error scraping: HTTPSConnectionPool(host='prices.shufersal.co.il', port=443): Max retries exceeded with url: //FileObject/UpdateCategory?catID=5 (Caused by ProxyError('Unable to connect to proxy', OSError('Tunnel connection failed: 403 Forbidden')))
+Logger       2026-11-07 21:50:34,972 INFO     [MainThread] logger.py:info Found the following files in /tmp/nonexist/x/SHUFERSAL/tmp0fj4h0rv/Shufersal
+Logger       2026-11-07 21:50:34,972 INFO     [MainThread] logger.py:info Folder /tmp/nonexist/x/SHUFERSAL/tmp0fj4h0rv/Shufersal: Num of Files= 0,Size= 0 MB
+Logger       2026-11-07 21:50:34,973 INFO     [MainThread] logger.py:info [DumpFolderNames.SHUFERSAL] Run #1 completed. Files found: 0, Total files: 0
+Logger       2026-11-07 21:50:34,973 INFO     [MainThread] logger.py:info [DumpFolderNames.SHUFERSAL] Exiting loop: single pass completed
+Logger       2026-11-07 21:50:34,973 INFO     [MainThread] logger.py:info done scraping DumpFolderNames.SHUFERSAL
