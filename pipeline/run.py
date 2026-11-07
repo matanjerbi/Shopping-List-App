@@ -76,12 +76,16 @@ def _download(chain: str, files_types: list[str], store_id=None, workdir=None):
     )
 
     now = dt.datetime.now(IL_TZ).replace(tzinfo=None)
-    for days_back in (0, 1, 2):
-        when = (now - dt.timedelta(days=days_back)).replace(hour=0, minute=0, second=0, microsecond=0)
+    # Most chains publish daily (not on Shabbat); some publish their stores file rarely,
+    # so after trying the last few days fall back to "whatever is listed".
+    attempts = [(now - dt.timedelta(days=d)).replace(hour=0, minute=0, second=0, microsecond=0) for d in (0, 1, 2, 3)]
+    attempts.append(None)
+    for when in attempts:
         out = tempfile.mkdtemp(dir=workdir)
         file_output = create_file_output_for_scraper(chain, {"output_mode": "disk", "base_storage_path": out})
         status_db = create_status_database_for_scraper(chain, {"database_type": "json", "base_path": os.path.join(out, "_status")})
-        kwargs = dict(limit=None, single_pass=True, files_types=files_types, store_id=store_id,
+        limit = None if when is not None else (None if files_types == ["STORE_FILE"] else 6)
+        kwargs = dict(limit=limit, single_pass=True, files_types=files_types, store_id=store_id,
                       when_date=when, file_output=file_output, status_database=status_db,
                       timeout_in_seconds=60)
         try:
@@ -92,7 +96,13 @@ def _download(chain: str, files_types: list[str], store_id=None, workdir=None):
                  if os.path.isfile(p) and "_status" not in p and re.search(r"\.(xml|gz|zip)$|[0-9]$", p, re.I)]
         if files:
             return sorted(files)
+        if _unreachable(out):
+            break
     return []
+
+
+def _unreachable(_out) -> bool:
+    return False
 
 
 def _latest_by_type(files: list[str], kind: str) -> str | None:

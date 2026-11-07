@@ -1,6 +1,16 @@
 {
-  "cities": ["רמת גן", "גבעתיים", "בני ברק"],
+  "cities": [
+    "רמת גן",
+    "גבעתיים",
+    "בני ברק"
+  ],
   "extraStores": [],
-  "skipChains": ["WOLT", "BAREKET", "GOOD_PHARM"],
-  "maxStoresPerChain": 40
+  "skipChains": [
+    "WOLT",
+    "BAREKET",
+    "GOOD_PHARM",
+    "YAYNO_BITAN_AND_CARREFOUR"
+  ],
+  "maxStoresPerChain": 40,
+  "_note": "YAYNO_BITAN_AND_CARREFOUR (prices.carrefour.co.il) blocks connections from GitHub's servers outside Israel"
 }
