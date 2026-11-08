@@ -121,9 +121,11 @@ jobs:
         id: plan
         env:
           BASE: ${{ steps.site.outputs.base }}
+          HEAD_MSG: ${{ github.event.head_commit.message }}
         run: |
           refresh=false
           if [ "${{ github.event_name }}" = "schedule" ]; then refresh=true; fi
+          if [ "${{ github.event_name }}" = "push" ] && echo "$HEAD_MSG" | grep -q "\[refresh\]"; then refresh=true; fi
           if [ "${{ github.event_name }}" = "workflow_dispatch" ] && [ "${{ inputs.refresh_data }}" = "true" ]; then refresh=true; fi
           mkdir -p prev
           if ! python pipeline/fetch_live.py "$BASE" prev; then refresh=true; fi
