@@ -78,7 +78,8 @@ def _download(chain: str, files_types: list[str], store_id=None, workdir=None):
     now = dt.datetime.now(IL_TZ).replace(tzinfo=None)
     # Most chains publish daily (not on Shabbat); some publish their stores file rarely,
     # so after trying the last few days fall back to "whatever is listed".
-    attempts = [(now - dt.timedelta(days=d)).replace(hour=0, minute=0, second=0, microsecond=0) for d in (0, 1, 2, 3)]
+    days = (0, 1, 2, 3) if files_types == ["STORE_FILE"] else (0, 1)
+    attempts = [(now - dt.timedelta(days=d)).replace(hour=0, minute=0, second=0, microsecond=0) for d in days]
     attempts.append(None)
     for when in attempts:
         out = tempfile.mkdtemp(dir=workdir)
@@ -138,13 +139,13 @@ def process_chain(chain: str, cities: list[str], extra_stores: list[str], workdi
             uniq.append(s)
         wanted = uniq[:max_stores]
         print(f"[{chain}] {len(stores)} stores, {len(wanted)} in area", flush=True)
-        for s in wanted:
+        def one_store(s):
             try:
                 files = _download(chain, ["PRICE_FULL_FILE", "PROMO_FULL_FILE"], store_id=int(s["storeId"]), workdir=workdir)
                 pf = _latest_by_type(files, "price")
                 if not pf:
                     print(f"  [{chain}] store {s['storeId']}: no price file", flush=True)
-                    continue
+                    return None
                 items = parse_prices(pf)
                 prf = _latest_by_type(files, "promo")
                 promos = parse_promos(prf) if prf else []
@@ -153,10 +154,18 @@ def process_chain(chain: str, cities: list[str], extra_stores: list[str], workdi
                 s2["items"] = items
                 s2["promos"] = promos
                 s2["priceFile"] = os.path.basename(pf)
-                result["stores"].append(s2)
                 print(f"  [{chain}] store {s['storeId']} {s['name']}: {len(items)} items, {len(promos)} promos", flush=True)
+                return s2
             except Exception as e:  # noqa: BLE001
                 print(f"  [{chain}] store {s['storeId']} failed: {e}", flush=True)
+                return None
+
+        # stores of one chain are downloaded in parallel (each call runs its own event loop)
+        from concurrent.futures import ThreadPoolExecutor
+        with ThreadPoolExecutor(max_workers=4) as ex:
+            for r in ex.map(one_store, wanted):
+                if r:
+                    result["stores"].append(r)
         result["ok"] = bool(result["stores"]) or not wanted
         result["inArea"] = len(wanted)
     except Exception as e:  # noqa: BLE001
