@@ -5,11 +5,12 @@ from il_supermarket_scarper.scrapper_runner import scrape_one_wrap
 from il_supermarket_scarper.utils.databases import create_file_output_for_scraper, create_status_database_for_scraper
 
 chain = sys.argv[1]
-store = int(sys.argv[2]) if len(sys.argv) > 2 and sys.argv[2] else None
-for days in (0, 1, 2):
+store = int(sys.argv[2]) if len(sys.argv) > 2 and sys.argv[2] not in ("", "-") else None
+types = sys.argv[3].split(",") if len(sys.argv) > 3 else ["PRICE_FULL_FILE"]
+for days in (0, 1):
     when = (dt.datetime.now() - dt.timedelta(days=days)).replace(hour=0, minute=0, second=0, microsecond=0)
     out = tempfile.mkdtemp()
-    kw = dict(limit=None, single_pass=True, files_types=["PRICE_FULL_FILE"], store_id=store, when_date=when,
+    kw = dict(limit=None, single_pass=True, files_types=types, store_id=store, when_date=when,
               file_output=create_file_output_for_scraper(chain, {"output_mode": "disk", "base_storage_path": out}),
               status_database=create_status_database_for_scraper(chain, {"database_type": "json", "base_path": out + "/_s"}),
               timeout_in_seconds=60)

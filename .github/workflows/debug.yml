@@ -11,8 +11,8 @@ jobs:
         with: { python-version: "3.12" }
       - run: pip install -q -r pipeline/requirements.txt
       - run: |
-          while read -r chain user; do
+          while read -r chain user types; do
             [ -z "$chain" ] && continue
             echo "===== $chain"
-            python pipeline/debug_chain.py "$chain" "$user" 2>&1 | grep -v "INFO\|DEBUG" | head -400
+            python pipeline/debug_chain.py "$chain" "$user" $types 2>&1 | grep -v "INFO\|DEBUG" | head -400
           done < .github/debug-request.txt
