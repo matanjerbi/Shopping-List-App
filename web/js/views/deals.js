@@ -5,7 +5,7 @@ import { addToList, logSaving, dismissDeal, itemToListEntry } from "../actions.j
 import { weeklySummary, UNIT_LABEL } from "../engine.js";
 
 const FILTERS = [
-  ["all", "הכל"], ["same", "המוצרים שלי"], ["alt", "חלופות"], ["stock", "כדאי למלאי"], ["urgent", "נגמר בקרוב"], ["target", "מחיר יעד"],
+  ["all", "הכל"], ["same", "המוצרים שלי"], ["alt", "חלופות במבצע"], ["stock", "כדאי למלאי"], ["urgent", "נגמר בקרוב"], ["target", "מחיר יעד"], ["cheaper", "חלופות זולות קבועות"],
 ];
 
 export function DealCard({ d, compact }) {
@@ -50,9 +50,11 @@ export function DealsView() {
   const real = deals.filter((d) => d.type !== "fake");
   const fakes = deals.filter((d) => d.type === "fake");
   const shown = useMemo(() => real.filter((d) => {
+    if (filter === "cheaper") return d.type === "cheaper";
+    if (d.type === "cheaper") return false; // permanent alternatives aren't deals — own tab only
     if (filter === "all") return true;
     if (filter === "same") return d.type === "same";
-    if (filter === "alt") return d.type === "alt" || d.type === "cheaper";
+    if (filter === "alt") return d.type === "alt";
     if (filter === "stock") return d.stockUp;
     if (filter === "urgent") return d.urgent;
     if (filter === "target") return d.type === "target";

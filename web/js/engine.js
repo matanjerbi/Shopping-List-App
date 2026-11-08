@@ -13,7 +13,7 @@ export const SUBSTITUTABLE = new Set([
   "mouthwash", "shaving", "pads", "cotton", "milk", "plant_milk", "choco_milk", "cottage", "white_cheese",
   "yellow_cheese", "salty_cheese", "cream", "butter", "margarine", "eggs", "water", "cola", "flour", "sugar",
   "salt", "oil", "vinegar", "rice", "pasta", "tuna", "tomato_paste", "oats", "tahini", "cat_food", "dog_food",
-  "cat_litter", "coffee", "tea", "bread", "crackers", "yogurt", "baking", "legumes",
+  "cat_litter", "coffee", "coffee_instant", "coffee_capsules", "coffee_beans", "tea", "bread", "crackers", "yogurt", "baking", "legumes",
 ]);
 
 export const STOCKABLE = new Set([
@@ -22,7 +22,7 @@ export const STOCKABLE = new Set([
   "aluminum_foil", "disposable", "shampoo", "conditioner", "body_wash", "deodorant", "toothpaste", "toothbrush",
   "mouthwash", "shaving", "pads", "cotton", "body_lotion", "water", "cola", "soft_drinks", "juice", "flour",
   "sugar", "salt", "oil", "vinegar", "rice", "pasta", "legumes", "tuna", "tomato_paste", "canned_veg", "spices",
-  "coffee", "tea", "oats", "cereal", "baking", "cat_food", "dog_food", "cat_litter", "beer", "wine", "spirits",
+  "coffee", "coffee_instant", "coffee_capsules", "coffee_beans", "tea", "oats", "cereal", "baking", "cat_food", "dog_food", "cat_litter", "beer", "wine", "spirits",
   "snack_bars", "crackers", "sauces", "tahini",
 ]);
 
@@ -170,7 +170,8 @@ export function findDeals({ products, catalog, stats = {}, prefs = {}, now = new
 
   for (const p of products) {
     const own = catalog.items.get(p.code);
-    const cat = p.cat || (own && own.cat) || "";
+    // a category the user picked wins; otherwise trust the (re)computed catalog category
+    const cat = (p.catManual && p.cat) || (own && own.cat) || p.cat || "";
     const unit = (own && own.unit) || p.unit || "";
     const qty = (own && own.qty) || p.qty || 0;
     const urgent = !!(p.runOut && p.runOut <= soon);
@@ -229,6 +230,9 @@ export function findDeals({ products, catalog, stats = {}, prefs = {}, now = new
           // promo alternatives need the normal threshold; a permanently cheaper alternative needs more
           const need = isPromo ? threshold : threshold + 0.1;
           if (sav < need) continue;
+          // a "same purpose" product that is 65%+ cheaper per unit is almost always a different
+          // kind of product that landed in the same category — don't suggest it
+          if (sav > 0.65) continue;
           const flags = { club: !!(off && off.promo.clubs.length), minPurchase: off ? off.promo.minPurchase : 0 };
           alts.push(mkDeal(isPromo ? "alt" : "cheaper", p, c, meta, price, e.price, refUnit * c.qty, isPromo ? off : null, flags, urgent, qty, unit));
         }
@@ -527,7 +531,7 @@ export function checkReceipt(lines, storeKey, catalog, prefs, when = new Date())
 // ------------------------------------------------------------------ summaries
 
 export function weeklySummary(deals) {
-  const real = deals.filter((d) => d.type !== "fake");
+  const real = deals.filter((d) => d.type !== "fake" && d.type !== "cheaper");
   const total = real.reduce((a, d) => a + d.saveAmount, 0);
   return { count: real.length, potential: round2(total), top: real.slice(0, 3) };
 }

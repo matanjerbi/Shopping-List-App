@@ -76,7 +76,7 @@ export function ProductView({ id }) {
         <label class="check"><input type="checkbox" checked=${allow} onChange=${(e) => patchProduct(key, { allowAlt: e.target.checked })} />
           <div class="grow">הצג גם חלופות ממותגים אחרים<div class="tiny muted">מוצרים אחרים מאותה קטגוריה, שמשמשים לאותה מטרה</div></div></label>
         <label class="field"><span>קטגוריה (קובעת מה נחשב חלופה)</span>
-          <select class="input" value=${p.cat || ""} onChange=${(e) => patchProduct(key, { cat: e.target.value })}>
+          <select class="input" value=${(p.catManual && p.cat) || (item && item.cat) || p.cat || ""} onChange=${(e) => patchProduct(key, { cat: e.target.value, catManual: !!e.target.value })}>
             <option value="">— ללא —</option>
             ${cats.map(([k, l]) => html`<option value=${k}>${l}</option>`)}
           </select></label>

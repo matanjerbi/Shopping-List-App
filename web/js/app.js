@@ -43,7 +43,7 @@ function useHash() {
 }
 
 function Nav({ tab }) {
-  const n = (state.deals || []).filter((d) => d.type !== "fake" && !state.dismissed[d.key] && !state.seenDeals[d.key]).length;
+  const n = (state.deals || []).filter((d) => d.type !== "fake" && d.type !== "cheaper" && !state.dismissed[d.key] && !state.seenDeals[d.key]).length;
   const listN = state.list.filter((x) => !x.done).length;
   const items = [
     ["deals", "/deals", "🔥", "מבצעים", n],

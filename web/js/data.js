@@ -124,7 +124,7 @@ export function engineProducts(products = state.products) {
     const pr = predictRunOut(p.purchases || []);
     const paid = (p.purchases || []).map((x) => x.price).filter((x) => x > 0);
     return {
-      code: p.code || "", name: p.name, cat: p.cat || "", unit: p.unit || "", qty: p.qty || 0,
+      code: p.code || "", name: p.name, cat: p.cat || "", catManual: !!p.catManual, unit: p.unit || "", qty: p.qty || 0,
       allowAlt: p.allowAlt, target: p.target || 0, runOut: pr.next || 0, refPrice: median(paid) || 0,
     };
   });
