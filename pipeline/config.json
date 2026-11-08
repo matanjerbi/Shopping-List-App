@@ -4,7 +4,10 @@
     "גבעתיים",
     "בני ברק"
   ],
-  "extraStores": [],
+  "extraStores": [
+    "7290103152017-24",
+    "7290103152017-32"
+  ],
   "skipChains": [
     "WOLT",
     "BAREKET",
@@ -12,5 +15,6 @@
     "YAYNO_BITAN_AND_CARREFOUR"
   ],
   "maxStoresPerChain": 40,
-  "_note": "YAYNO_BITAN_AND_CARREFOUR (prices.carrefour.co.il) blocks connections from GitHub's servers outside Israel"
+  "_note": "YAYNO_BITAN_AND_CARREFOUR (prices.carrefour.co.il) blocks connections from GitHub's servers outside Israel",
+  "_extraStores": "Osher Ad Tel Aviv (Kraminitzky 3) and Kiryat Ono — the closest Osher Ad branches outside the configured cities"
 }
