@@ -59,7 +59,15 @@ export function saveReceipt(rec) {
     products[key] = p;
   }
   const receipts = [rec, ...state.receipts.filter((r) => r.id !== rec.id)].sort((a, b) => b.date - a.date);
-  update({ products, receipts });
+  // savings: a receipt line that bought an item at (or below) a deal price we showed
+  const taken = [...state.taken];
+  for (const l of rec.lines) {
+    if (l.skip || !l.code) continue;
+    const paid = l.qty ? l.total / l.qty : l.total;
+    const d = (state.deals || []).find((x) => x.type !== "fake" && x.item.code === l.code && paid <= x.price + 0.05 && x.ref > paid);
+    if (d && !taken.some((t) => t.key === d.key && t.receipt === rec.id)) taken.unshift({ date: rec.date, name: d.item.name, saved: Math.round((d.ref - paid) * (l.qty || 1) * 100) / 100, key: d.key, store: rec.storeKey || "", receipt: rec.id });
+  }
+  update({ products, receipts, taken: taken.slice(0, 500) });
   afterProductsChange();
 }
 

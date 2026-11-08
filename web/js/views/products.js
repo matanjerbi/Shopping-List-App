@@ -1,8 +1,9 @@
-import { html, useState, Top, Empty, DataStatus, ProductSearch, PriceTable, nis, go, fmtDate, daysFromNow, minPrice } from "../ui.js";
+import { html, useState, Top, Empty, DataStatus, ProductSearch, nis, pct, go, daysFromNow, endLabel } from "../ui.js";
+import { DealCard } from "./deals.js";
 import { state } from "../store.js";
-import { catLabel, productKey, storeLabel } from "../data.js";
+import { catLabel, productKey, storeShort } from "../data.js";
 import { addProduct, patchProduct, removeProduct, addToList, itemToListEntry } from "../actions.js";
-import { predictRunOut, SUBSTITUTABLE, UNIT_LABEL, median } from "../engine.js";
+import { predictRunOut, SUBSTITUTABLE, UNIT_LABEL, median, effectivePrice, perUnit } from "../engine.js";
 
 export function ProductsView() {
   const [q, setQ] = useState("");
@@ -13,7 +14,7 @@ export function ProductsView() {
     : sort === "deals" ? b.deals - a.deals
     : (a.pr.next || 9e15) - (b.pr.next || 9e15));
   return html`<div>
-    <${Top} title="המוצרים שלי" right=${html`<button class="iconbtn" onClick=${() => go("/products/add")} aria-label="הוספה">＋</button>`} />
+    <${Top} title="המוצרים שלי" right=${html`<button class="iconbtn" onClick=${() => go("/receipts")} aria-label="קבלות" title="קבלות">🧾</button><button class="iconbtn" onClick=${() => go("/receipt/new")} aria-label="צלם קבלה" title="צלם קבלה">📷</button><button class="iconbtn" onClick=${() => go("/products/add")} aria-label="הוספה">＋</button>`} />
     <main>
       <${DataStatus} />
       ${!list.length && !q ? html`<${Empty} icon="🛒" title="עוד אין מוצרים">
@@ -29,7 +30,7 @@ export function ProductsView() {
             return html`<div class="li" style="cursor:pointer" onClick=${() => go(`/product/${encodeURIComponent(key)}`)}>
               <div class="thumb">${deals ? "🔥" : "📦"}</div>
               <div class="grow"><div class="ellipsis">${p.name}</div>
-                <div class="tiny muted">${catLabel(p.cat) || "ללא קטגוריה"} · נקנה ${(p.purchases || []).length} פעמים
+                <div class="tiny muted">${catLabel(p.cat) || "ללא קטגוריה"}${(p.purchases || []).length ? ` · נקנה ${(p.purchases || []).length} פעמים` : ""}
                   ${pr.next ? html` · <span style=${days <= 3 ? "color:var(--warn);font-weight:600" : ""}>${days <= 0 ? "כנראה נגמר" : `נגמר בעוד ~${days} ימים`}</span>` : ""}</div></div>
               ${deals > 0 && html`<span class="tag bad">${deals} מבצעים</span>`}
             </div>`;
@@ -50,71 +51,103 @@ export function AddProductView() {
   </div>`;
 }
 
-/** Product I buy: settings, history, prices */
+/** One compact screen for any product: what it costs now, where, vs. usual — settings tucked away. */
+function ProductSheet({ item, p, pkey }) {
+  const [open, setOpen] = useState(false);
+  const rows = [];
+  if (item) {
+    for (const k of item.at.keys()) {
+      const meta = state.catalog.stores.get(k);
+      const ep = effectivePrice(item, k, state.catalog, state.prefs);
+      if (meta && ep) rows.push({ meta, ep });
+    }
+    rows.sort((a, b) => a.ep.price - b.ep.price);
+  }
+  const best = rows[0];
+  const worst = rows[rows.length - 1];
+  const meds = [], mins = [], maxs = [];
+  if (item) for (const r of rows) {
+    const st = state.stats && state.stats[r.meta.chainId] && state.stats[r.meta.chainId][item.code];
+    if (st) { meds.push(st[0]); mins.push(st[1]); maxs.push(st[2]); }
+  }
+  const usual = meds.length ? median(meds) : rows.length ? median(rows.map((r) => r.ep.regular)) : 0;
+  const lo = Math.min(...mins, ...rows.map((r) => r.ep.price));
+  const hi = Math.max(...maxs, ...rows.map((r) => r.ep.regular));
+  const pr = p ? predictRunOut(p.purchases || []) : null;
+  const paid = p ? (p.purchases || []).map((x) => x.price).filter(Boolean) : [];
+  const days = pr && pr.next ? daysFromNow(pr.next) : null;
+  const saving = best && usual ? 1 - best.ep.price / usual : 0;
+  const deals = p ? (state.deals || []).filter((d) => d.type !== "fake" && d.type !== "cheaper" && !state.dismissed[d.key]
+    && (d.product.code ? d.product.code === p.code : d.product.name === p.name)
+    && !(d.item.code === p.code && best && d.store.k === best.meta.k)) : [];
+  const effCat = (p && p.catManual && p.cat) || (item && item.cat) || (p && p.cat) || "";
+  const allow = p ? p.allowAlt ?? SUBSTITUTABLE.has(effCat) : false;
+  const cats = Object.entries(state.categories || {}).sort((a, b) => a[1].localeCompare(b[1], "he"));
+  const size = item && item.qty && item.unit ? `${+item.qty.toFixed(3)} ${UNIT_LABEL[item.unit]}` : "";
+  const unitP = (price) => { const u = item && perUnit(price, item); return u ? `${nis(u)}/${UNIT_LABEL[item.unit]}` : ""; };
+  const pos = (v) => (hi > lo ? ((v - lo) / (hi - lo)) * 100 : 50);
+
+  return html`<div>
+    <div class="tiny muted" style="margin-top:-4px">${[size, catLabel(effCat), item && item.manuf].filter(Boolean).join(" · ")}</div>
+
+    ${best ? html`<div class="card">
+      <div class="row top-align">
+        <div class="grow">
+          <div class="tiny muted">הכי זול עכשיו</div>
+          <div style="font-size:30px;font-weight:800;line-height:1.15">${nis(best.ep.price)}</div>
+          <div class="small">${storeShort(best.meta)}</div>
+        </div>
+        ${saving >= 0.05 ? html`<div class="pct-chip">−${pct(saving)}<small>מהרגיל</small></div>`
+          : best.ep.offer ? html`<div class="pct-chip gray">מבצע<small>לא חריג</small></div>` : null}
+      </div>
+      ${best.ep.offer && html`<div class="tiny mt" style="color:var(--bad)">${best.ep.offer.promo.desc} ${endLabel(best.ep.offer.promo.end)}</div>`}
+      <div class="kv mt">
+        <div><b>${nis(usual)}</b><span>מחיר רגיל</span></div>
+        ${paid.length ? html`<div><b>${nis(median(paid))}</b><span>שילמת בד"כ</span></div>`
+          : rows.length > 1 ? html`<div><b>${nis(worst.ep.price - best.ep.price)}</b><span>פער בין סניפים</span></div>` : null}
+        ${p ? html`<div><b>${days === null ? "—" : days <= 0 ? "עכשיו" : `${days} ימים`}</b><span>מתי נגמר</span></div>` : null}
+      </div>
+      ${hi > lo && html`<div class="range mt">
+        <div class="range-bar"><div class="range-dot" style=${{ insetInlineStart: `calc(${pos(best.ep.price)}% - 6px)` }}></div></div>
+        <div class="row tiny muted"><span>${nis(lo)}</span><span class="grow center">טווח מחירים 90 יום</span><span>${nis(hi)}</span></div>
+      </div>`}
+    </div>`
+    : html`<div class="banner small">${p && !p.code ? html`נשמר מקבלה בלי ברקוד, אז אין לו מחירים. <a href=${`#/relink/${encodeURIComponent(pkey)}`}>שייך למוצר</a>` : "לא נמכר כרגע בסניפים שבחרת."}</div>`}
+
+    ${rows.length > 1 && html`<div class="card tight">
+      ${rows.map(({ meta, ep }, i) => html`<div class="prow">
+        <div class=${`grow ellipsis ${i === 0 ? "b" : ""}`}>${storeShort(meta)}${ep.offer ? html` <span class="tiny" style="color:var(--bad)">· ${ep.offer.promo.minQty > 1 ? `${ep.offer.promo.minQty} ב-${nis(ep.offer.eff * ep.offer.promo.minQty)}` : "מבצע"}${ep.offer.promo.clubs.length ? " (מועדון)" : ""}</span>` : ""}</div>
+        <div class="tiny muted" style="min-width:70px;text-align:left">${unitP(ep.price)}</div>
+        <div class=${i === 0 ? "b good" : ""} style="min-width:62px;text-align:left">${nis(ep.price)}</div>
+      </div>`)}
+    </div>`}
+
+    ${deals.length > 0 && html`<h3>מבצעים וחלופות</h3>${deals.slice(0, 4).map((d) => html`<${DealCard} key=${d.key} d=${d} />`)}`}
+
+    ${p && html`<div class="card tight">
+      <div class="prow" style="cursor:pointer" onClick=${() => setOpen(!open)}><div class="grow">⚙️ הגדרות התראה</div><span class="muted">${open ? "▲" : "▼"}</span></div>
+      ${open && html`<div>
+        <label class="check"><input type="checkbox" checked=${allow} onChange=${(e) => patchProduct(pkey, { allowAlt: e.target.checked })} /><div class="grow">גם מותגים אחרים</div></label>
+        <div class="row mt">
+          <select class="input grow" value=${effCat} onChange=${(e) => patchProduct(pkey, { cat: e.target.value, catManual: !!e.target.value })}>
+            <option value="">קטגוריה: ללא</option>${cats.map(([k, l]) => html`<option value=${k}>${l}</option>`)}
+          </select>
+          <input class="input" style="width:118px" type="number" inputmode="decimal" step="0.1" placeholder="מחיר יעד ₪" value=${p.target || ""} onChange=${(e) => patchProduct(pkey, { target: parseFloat(e.target.value) || 0 })} />
+        </div>
+        <button class="btn sm ghost mt" style="color:var(--bad)" onClick=${() => { if (confirm("להסיר מהמוצרים שלך?")) { removeProduct(pkey); go("/products"); } }}>הסר מהמוצרים שלי</button>
+      </div>`}
+    </div>`}
+  </div>`;
+}
+
 export function ProductView({ id }) {
   const key = decodeURIComponent(id);
   const p = state.products[key];
   if (!p) return html`<div><${Top} title="מוצר" back="/products" /><main><${Empty} icon="❓" title="המוצר לא נמצא" /></main></div>`;
   const item = state.catalog && p.code ? state.catalog.items.get(p.code) : null;
-  const pr = predictRunOut(p.purchases || []);
-  const paid = (p.purchases || []).map((x) => x.price).filter(Boolean);
-  const allow = p.allowAlt ?? SUBSTITUTABLE.has(p.cat);
-  const myDeals = (state.deals || []).filter((d) => (d.product.code ? d.product.code === p.code : d.product.name === p.name) && !state.dismissed[d.key]);
-  const cats = Object.entries(state.categories || {}).sort((a, b) => a[1].localeCompare(b[1], "he"));
   return html`<div>
-    <${Top} title=${p.name} back="/products" />
-    <main>
-      <div class="stats">
-        <div class="stat"><div class="v">${(p.purchases || []).length}</div><div class="l">קניות</div></div>
-        <div class="stat"><div class="v">${pr.avgDays ? `${pr.avgDays} ימ'` : "—"}</div><div class="l">קונה כל</div></div>
-        <div class="stat"><div class="v">${pr.next ? fmtDate(pr.next) : "—"}</div><div class="l">צפוי להיגמר</div></div>
-      </div>
-      ${myDeals.filter((d) => d.type !== "fake").length > 0 && html`<div class="banner info">🔥 יש ${myDeals.filter((d) => d.type !== "fake").length} מבצעים רלוונטיים. <a href="#/deals">לצפייה</a></div>`}
-
-      <div class="card">
-        <h3 style="margin-top:0">התאמות</h3>
-        <label class="check"><input type="checkbox" checked=${allow} onChange=${(e) => patchProduct(key, { allowAlt: e.target.checked })} />
-          <div class="grow">הצג גם חלופות ממותגים אחרים<div class="tiny muted">מוצרים אחרים מאותה קטגוריה, שמשמשים לאותה מטרה</div></div></label>
-        <label class="field"><span>קטגוריה (קובעת מה נחשב חלופה)</span>
-          <select class="input" value=${(p.catManual && p.cat) || (item && item.cat) || p.cat || ""} onChange=${(e) => patchProduct(key, { cat: e.target.value, catManual: !!e.target.value })}>
-            <option value="">— ללא —</option>
-            ${cats.map(([k, l]) => html`<option value=${k}>${l}</option>`)}
-          </select></label>
-        <label class="field"><span>מחיר יעד: התרע כשהמחיר יורד מתחת ל- (₪ ליחידה)</span>
-          <input class="input" type="number" inputmode="decimal" step="0.1" value=${p.target || ""} placeholder=${paid.length ? `שילמת בד"כ ${median(paid).toFixed(2)}` : ""}
-            onChange=${(e) => patchProduct(key, { target: parseFloat(e.target.value) || 0 })} /></label>
-        <div class="btns">
-          <button class="btn sm sec" onClick=${() => addToList({ text: p.name, code: p.code, cat: p.cat })}>+ לרשימת קניות</button>
-          <button class="btn sm danger" onClick=${() => { if (confirm("להסיר את המוצר מהרשימה שלך?")) { removeProduct(key); go("/products"); } }}>הסר</button>
-        </div>
-      </div>
-
-      ${item ? html`<h2>מחירים בסניפים שלך</h2><div class="card"><${PriceTable} item=${item} /></div>
-        <${HistoryInfo} item=${item} />`
-      : p.code ? html`<div class="banner small">המוצר לא נמצא כרגע בסניפים שבחרת.</div>`
-      : html`<div class="banner small">המוצר נשמר מהקבלה בלי ברקוד, ולכן אי אפשר להשוות את מחירו. <a href="#" onClick=${(e) => { e.preventDefault(); go(`/relink/${encodeURIComponent(key)}`); }}>שייך למוצר מהמחירון</a></div>`}
-
-      ${(p.purchases || []).length > 0 && html`<h2>היסטוריית קניות</h2><div class="card">
-        ${[...p.purchases].reverse().map((x) => html`<div class="li small"><div class="grow">${fmtDate(x.date, true)} ${x.storeKey && state.catalog && state.catalog.stores.get(x.storeKey) ? "· " + storeLabel(state.catalog.stores.get(x.storeKey)) : ""}</div><div>${x.qty > 1 ? `${x.qty} × ` : ""}${nis(x.price)}</div></div>`)}
-      </div>`}
-    </main>
-  </div>`;
-}
-
-export function HistoryInfo({ item }) {
-  const rows = [];
-  const chains = new Set();
-  for (const k of item.at.keys()) {
-    const m = state.catalog.stores.get(k);
-    if (!m || chains.has(m.chainId)) continue;
-    chains.add(m.chainId);
-    const st = state.stats && state.stats[m.chainId] && state.stats[m.chainId][item.code];
-    if (st) rows.push({ m, st });
-  }
-  if (!rows.length) return null;
-  return html`<h2>היסטוריית מחיר (90 יום)</h2><div class="card">
-    ${rows.map(({ m, st }) => html`<div class="li small"><div class="grow b">${m.chainName}</div>
-      <div class="tiny">חציון ${nis(st[0])} · מינימום ${nis(st[1])} · מקסימום ${nis(st[2])}${st[4] ? html`<br/>השתנה לפני ${st[3]} ימים (היה ${nis(st[4])})` : ""}</div></div>`)}
+    <${Top} title=${p.name} back="/products" right=${html`<button class="iconbtn" title="לרשימה" onClick=${() => addToList({ text: p.name, code: p.code, cat: p.cat })}>📝</button>`} />
+    <main><${DataStatus} /><${ProductSheet} item=${item} p=${p} pkey=${key} /></main>
   </div>`;
 }
 
@@ -122,22 +155,14 @@ export function HistoryInfo({ item }) {
 export function ItemView({ code }) {
   const item = state.catalog && state.catalog.items.get(code);
   if (!item) return html`<div><${Top} title="מוצר" back="/deals" /><main><${DataStatus} />
-    ${!state.dataLoading && html`<${Empty} icon="❓" title="המוצר לא נמצא בסניפים שבחרת">ברקוד ${code}</${Empty}>`}</main></div>`;
+    ${!state.dataLoading && html`<${Empty} icon="❓" title="לא נמכר בסניפים שבחרת">ברקוד ${code}</${Empty}>`}</main></div>`;
   const key = productKey(item);
-  const mine = state.products[key] && !state.products[key].hidden;
-  const up = item.qty && item.unit ? ` · ${item.qty} ${UNIT_LABEL[item.unit]}` : "";
+  const p = state.products[key] && !state.products[key].hidden ? state.products[key] : null;
   return html`<div>
-    <${Top} title=${item.name} back="/deals" />
+    <${Top} title=${item.name} back="/deals" right=${html`<button class="iconbtn" title="לרשימה" onClick=${() => addToList(itemToListEntry(item))}>📝</button>`} />
     <main>
-      <div class="small muted">${item.manuf || ""}${up} · ${catLabel(item.cat) || "ללא קטגוריה"} · ${item.code}</div>
-      <div class="btns mt">
-        ${mine ? html`<button class="btn sm sec" onClick=${() => go(`/product/${encodeURIComponent(key)}`)}>⚙️ ההגדרות שלי למוצר</button>`
-          : html`<button class="btn sm" onClick=${() => addProduct(item)}>+ למוצרים שלי (קבל התראות)</button>`}
-        <button class="btn sm sec" onClick=${() => addToList(itemToListEntry(item))}>+ לרשימת קניות</button>
-      </div>
-      <h2>מחירים בסניפים שלך</h2>
-      <div class="card"><${PriceTable} item=${item} /></div>
-      <${HistoryInfo} item=${item} />
+      ${!p && html`<button class="btn block mb" onClick=${() => addProduct(item)}>＋ הוסף למוצרים שלי (התראות על מבצעים)</button>`}
+      <${ProductSheet} item=${item} p=${p} pkey=${key} />
     </main>
   </div>`;
 }

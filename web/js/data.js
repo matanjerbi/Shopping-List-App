@@ -141,6 +141,19 @@ export function storeLabel(meta) {
   return `${meta.chainName || ""} ${meta.name || ""}`.trim();
 }
 
+const CHAIN_SHORT = [["רמי לוי", "רמי לוי"], ["שופרסל", "שופרסל"], ["אושר עד", "אושר עד"], ["טיב טעם", "טיב טעם"], ["יוחננוף", "יוחננוף"], ["ויקטורי", "ויקטורי"], ["יינות ביתן", "יינות ביתן"], ["קרפור", "קרפור"], ["חצי חינם", "חצי חינם"], ["יילו", "יילו"], ["פרשמרקט", "פרשמרקט"], ["פרש מרקט", "פרשמרקט"], ["קשת", "קשת טעמים"], ["דור אלון", "AM:PM"]];
+
+/** Short store name: "רמי לוי · רמת גן איילון" instead of "רמי לוי שיווק השקמה רמי לוי רמת גן איילון" */
+export function storeShort(meta) {
+  if (!meta) return "";
+  const full = `${meta.chainName || ""} ${meta.name || ""}`;
+  let chain = (meta.chainName || "").replace(/שיווק השקמה|בע"מ|בע״מ|\(.*?\)/g, "").trim();
+  for (const [needle, short] of CHAIN_SHORT) if (full.includes(needle)) { chain = short; break; }
+  let branch = (meta.name || "").split(chain).join(" ").replace(/שיווק השקמה|בע"מ/g, " ").replace(/\s+/g, " ").trim();
+  if (!branch) branch = meta.city || "";
+  return `${chain} · ${branch}`.replace(/ · $/, "");
+}
+
 export function catLabel(cat) {
   return (state.categories && state.categories[cat]) || "";
 }

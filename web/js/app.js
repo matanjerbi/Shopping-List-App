@@ -19,9 +19,9 @@ const ROUTES = [
   [/^\/product\/(.+)$/, ProductView, "products", "id"],
   [/^\/relink\/(.+)$/, RelinkView, "products", "id"],
   [/^\/item\/(.+)$/, ItemView, "deals", "code"],
-  [/^\/receipts$/, ReceiptsView, "receipts"],
-  [/^\/receipt\/new$/, NewReceiptView, "receipts"],
-  [/^\/receipt\/(.+)$/, ReceiptView, "receipts", "id"],
+  [/^\/receipts$/, ReceiptsView, "products"],
+  [/^\/receipt\/new$/, NewReceiptView, "products"],
+  [/^\/receipt\/(.+)$/, ReceiptView, "products", "id"],
   [/^\/scan$/, ScanView, "deals"],
   [/^\/shared$/, SharedListsView, "list"],
   [/^\/l\/([A-Za-z0-9_-]+)$/, SharedListView, "list", "id"],
@@ -49,7 +49,6 @@ function Nav({ tab }) {
     ["deals", "/deals", "🔥", "מבצעים", n],
     ["list", "/list", "📝", "רשימה", listN],
     ["products", "/products", "🛒", "המוצרים שלי", 0],
-    ["receipts", "/receipts", "🧾", "קבלות", 0],
     ["more", "/more", "☰", "עוד", 0],
   ];
   return html`<nav class="nav">${items.map(([k, href, i, l, badge]) => html`<a href=${"#" + href} class=${tab === k ? "on" : ""}>

@@ -1,45 +1,57 @@
 import { html, useState, useMemo, Top, Empty, DataStatus, nis, pct, go, endLabel } from "../ui.js";
 import { state, update } from "../store.js";
-import { storeLabel } from "../data.js";
-import { addToList, logSaving, dismissDeal, itemToListEntry } from "../actions.js";
+import { storeLabel, storeShort } from "../data.js";
+import { addToList, dismissDeal, itemToListEntry } from "../actions.js";
 import { weeklySummary, UNIT_LABEL } from "../engine.js";
 
 const FILTERS = [
-  ["all", "הכל"], ["same", "המוצרים שלי"], ["alt", "חלופות במבצע"], ["stock", "כדאי למלאי"], ["urgent", "נגמר בקרוב"], ["target", "מחיר יעד"], ["cheaper", "חלופות זולות קבועות"],
+  ["all", "הכל"], ["same", "בדיוק מה שאני קונה"], ["alt", "מותגים אחרים"], ["stock", "למלאי"], ["cheaper", "זול תמיד"],
 ];
 
-export function DealCard({ d, compact }) {
+export function DealCard({ d }) {
   const isAlt = d.type === "alt" || d.type === "cheaper";
   const cls = d.type === "target" ? "target" : isAlt ? "alt" : "";
   const isNew = !state.seenDeals[d.key];
-  const unitTxt = d.unitPrice && d.unit ? `${nis(d.unitPrice)} ל${UNIT_LABEL[d.unit] || ""}` : "";
-  return html`<div class="card deal">
+  const unitTxt = isAlt && d.unitPrice && d.unit ? `${nis(d.unitPrice)}/${UNIT_LABEL[d.unit]} במקום ${nis(d.refUnitPrice)}` : "";
+  const note = d.type === "target" ? "הגיע למחיר היעד" : d.urgent ? "נגמר לך בקרוב" : d.stockUp ? "כדאי לקנות מלאי" : d.flags.club ? "למועדון" : d.flags.minPurchase > 0 ? `בקנייה מעל ${nis(d.flags.minPurchase)}` : "";
+  return html`<div class="card deal compact">
     <div class="row top-align">
-      <div class=${`pct ${cls}`}>${d.type === "target" ? "🎯" : `-${pct(d.savingsPct)}`}<small>${d.type === "target" ? "יעד" : isAlt ? "חלופה" : "מבצע"}</small></div>
-      <div class="grow">
-        ${isAlt && html`<div class="instead">במקום ${d.product.name}</div>`}
-        <div class="b" style="cursor:pointer" onClick=${() => go(`/item/${d.item.code}`)}>${d.item.name}</div>
-        <div class="small muted">${storeLabel(d.store)}</div>
-        <div class="mt"><span class="price">${nis(d.price)}</span>${d.regular > d.price + 0.01 && html`<span class="was">${nis(d.regular)}</span>`}
-          ${d.minQty > 1 && html`<span class="small muted"> ליח' בקניית ${d.minQty}</span>`}</div>
-        ${unitTxt && html`<div class="tiny muted">${unitTxt}${d.refUnitPrice && isAlt ? ` · אצלך בד"כ ${nis(d.refUnitPrice)}` : ""}</div>`}
-        ${d.offer && html`<div class="small mt">${d.offer.promo.desc} <span class="muted">${endLabel(d.offer.promo.end)}</span></div>`}
-        <div>
-          ${isNew && html`<span class="tag bad">חדש</span>`}
-          ${d.type === "cheaper" && html`<span class="tag gray">זול יותר באופן קבוע</span>`}
-          ${d.stockUp && html`<span class="tag good">כדאי לקנות מלאי</span>`}
-          ${d.urgent && html`<span class="tag warn">נגמר לך בקרוב</span>`}
-          ${d.flags.club && html`<span class="tag">מועדון</span>`}
-          ${d.flags.minPurchase > 0 && html`<span class="tag warn">בקנייה מעל ${nis(d.flags.minPurchase)}</span>`}
-          ${d.saveAmount >= 1 && html`<span class="tag good">חוסך ${nis(d.saveAmount)}</span>`}
+      <div class=${`pct ${cls}`}>${d.type === "target" ? "🎯" : `−${pct(d.savingsPct)}`}</div>
+      <div class="grow" style="min-width:0;cursor:pointer" onClick=${() => go(`/item/${d.item.code}`)}>
+        ${isAlt && html`<div class="instead ellipsis">במקום ${d.product.name}</div>`}
+        <div class="b ellipsis2">${isNew ? html`<span class="newdot"></span>` : ""}${d.item.name}</div>
+        <div class="tiny muted ellipsis">${storeShort(d.store)}${d.offer && endLabel(d.offer.promo.end) ? ` · ${endLabel(d.offer.promo.end)}` : ""}</div>
+        ${unitTxt && html`<div class="tiny muted">${unitTxt}</div>`}
+        ${note && html`<div class="tiny" style="color:var(--warn)">${note}</div>`}
+      </div>
+      <div style="text-align:left;flex:none">
+        <div class="price">${nis(d.price)}</div>
+        ${d.regular > d.price + 0.01 && html`<div class="was">${nis(d.regular)}</div>`}
+        ${d.minQty > 1 && html`<div class="tiny muted">ליח' בקניית ${d.minQty}</div>`}
+        <div class="deal-actions">
+          <button class="iconbtn sm ghosty" title="הסתר" onClick=${() => dismissDeal(d.key)}>✕</button>
+          <button class="iconbtn sm" title="לרשימה" onClick=${() => addToList({ ...itemToListEntry(d.item), qty: d.minQty || 1, note: `${storeShort(d.store)} ${nis(d.price)}` })}>＋</button>
         </div>
       </div>
     </div>
-    ${!compact && html`<div class="btns mt">
-      <button class="btn sm sec" onClick=${() => addToList({ ...itemToListEntry(d.item), qty: d.minQty || 1, note: `${storeLabel(d.store)} ${nis(d.price)}` })}>+ לרשימה</button>
-      <button class="btn sm sec" onClick=${() => logSaving(d)}>✓ ניצלתי</button>
-      <button class="btn sm ghost" onClick=${() => dismissDeal(d.key)}>הסתר</button>
-    </div>`}
+  </div>`;
+}
+
+function Onboarding({ stores, products }) {
+  const Step = ({ n, done, title, children }) => html`<div class="card">
+    <div class="row"><div class=${`step ${done ? "done" : ""}`}>${done ? "✓" : n}</div><div class="grow b">${title}</div></div>
+    ${!done && html`<div class="mt">${children}</div>`}
+  </div>`;
+  return html`<div>
+    <div class="small muted mb">שני צעדים, ואחריהם יופיעו כאן רק מבצעים שבאמת משתלמים על מה שאתה קונה.</div>
+    <${Step} n="1" done=${stores > 0} title=${stores ? `נבחרו ${stores} סניפים` : "איפה אתה קונה?"}>
+      <button class="btn" onClick=${() => go("/stores")}>בחירת סניפים</button>
+    </${Step}>
+    <${Step} n="2" done=${products > 0} title="מה אתה קונה?">
+      <div class="btns"><button class="btn" disabled=${!stores} onClick=${() => go("/receipt/new")}>📷 צלם קבלה</button>
+      <button class="btn sec" disabled=${!stores} onClick=${() => go("/products/add")}>＋ הוסף מוצר</button></div>
+      <div class="tiny muted mt">כל קבלה מוסיפה את המוצרים שבה אוטומטית.</div>
+    </${Step}>
   </div>`;
 }
 
@@ -81,17 +93,7 @@ export function DealsView() {
     <${Top} title="מבצעים חריגים" right=${html`<button class="iconbtn" onClick=${() => go("/scan")} aria-label="סריקת ברקוד">▦</button>`} />
     <main>
       <${DataStatus} />
-      ${!s.myStores.length ? html`<${Empty} icon="🏪" title="בוא נתחיל: איפה אתה קונה?">
-          <div>בחר את הסניפים באזור שלך, ואני אחפש בהם מבצעים.</div>
-          <button class="btn mt" onClick=${() => go("/stores")}>בחירת סניפים</button>
-        </${Empty}>`
-      : !nProducts ? html`<${Empty} icon="🧾" title="עכשיו נלמד מה אתה קונה">
-          <div>צלם קבלה מהסופר, או הוסף מוצרים ידנית. ככה אדע אילו מבצעים רלוונטיים לך.</div>
-          <div class="btns mt" style="justify-content:center">
-            <button class="btn" onClick=${() => go("/receipt/new")}>📷 סריקת קבלה</button>
-            <button class="btn sec" onClick=${() => go("/products/add")}>+ הוספת מוצר</button>
-          </div>
-        </${Empty}>`
+      ${!s.myStores.length || !nProducts ? html`<${Onboarding} stores=${s.myStores.length} products=${nProducts} />`
       : html`
         <div class="stats">
           <div class="stat"><div class="v">${sum.count}</div><div class="l">מבצעים רלוונטיים</div></div>
