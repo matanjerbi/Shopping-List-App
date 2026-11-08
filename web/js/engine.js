@@ -12,7 +12,7 @@ export const SUBSTITUTABLE = new Set([
   "aluminum_foil", "disposable", "shampoo", "conditioner", "body_wash", "deodorant", "toothpaste", "toothbrush",
   "mouthwash", "shaving", "pads", "cotton", "milk", "plant_milk", "choco_milk", "cottage", "white_cheese",
   "yellow_cheese", "salty_cheese", "cream", "butter", "margarine", "eggs", "water", "cola", "flour", "sugar",
-  "salt", "oil", "vinegar", "rice", "pasta", "tuna", "tomato_paste", "oats", "tahini", "cat_food", "dog_food",
+  "salt", "oil", "oil_olive", "vinegar", "rice", "pasta", "tuna", "tomato_paste", "oats", "tahini", "cat_food", "dog_food",
   "cat_litter", "coffee", "coffee_instant", "coffee_capsules", "coffee_beans", "tea", "bread", "crackers", "yogurt", "baking", "legumes",
 ]);
 
@@ -21,7 +21,7 @@ export const STOCKABLE = new Set([
   "surface_cleaner", "sponges", "trash_bags", "toilet_paper", "paper_towels", "tissues", "wet_wipes", "diapers",
   "aluminum_foil", "disposable", "shampoo", "conditioner", "body_wash", "deodorant", "toothpaste", "toothbrush",
   "mouthwash", "shaving", "pads", "cotton", "body_lotion", "water", "cola", "soft_drinks", "juice", "flour",
-  "sugar", "salt", "oil", "vinegar", "rice", "pasta", "legumes", "tuna", "tomato_paste", "canned_veg", "spices",
+  "sugar", "salt", "oil", "oil_olive", "vinegar", "rice", "pasta", "legumes", "tuna", "tomato_paste", "canned_veg", "spices",
   "coffee", "coffee_instant", "coffee_capsules", "coffee_beans", "tea", "oats", "cereal", "baking", "cat_food", "dog_food", "cat_litter", "beer", "wine", "spirits",
   "snack_bars", "crackers", "sauces", "tahini",
 ]);
