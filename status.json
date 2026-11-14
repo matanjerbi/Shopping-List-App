@@ -1,0 +1,221 @@
+{
+ "u": "2026-11-14 20:54",
+ "chains": [
+  {
+   "chain": "CITY_MARKET_SHOPS",
+   "ok": true,
+   "stores": 0,
+   "inArea": 0,
+   "error": "",
+   "seconds": 8
+  },
+  {
+   "chain": "DOR_ALON",
+   "ok": true,
+   "stores": 7,
+   "inArea": 7,
+   "error": "",
+   "seconds": 26
+  },
+  {
+   "chain": "HAZI_HINAM",
+   "ok": false,
+   "stores": 0,
+   "inArea": 0,
+   "error": "no stores file",
+   "seconds": 72
+  },
+  {
+   "chain": "HET_COHEN_NEW_SOURCE",
+   "ok": false,
+   "stores": 0,
+   "inArea": 0,
+   "error": "no stores file",
+   "seconds": 152
+  },
+  {
+   "chain": "KESHET",
+   "ok": true,
+   "stores": 1,
+   "inArea": 1,
+   "error": "",
+   "seconds": 14
+  },
+  {
+   "chain": "KING_STORE",
+   "ok": true,
+   "stores": 0,
+   "inArea": 0,
+   "error": "",
+   "seconds": 4
+  },
+  {
+   "chain": "MAAYAN_2000",
+   "ok": true,
+   "stores": 3,
+   "inArea": 3,
+   "error": "",
+   "seconds": 8
+  },
+  {
+   "chain": "MAHSANI_ASHUK_NEW_SOURCE",
+   "ok": false,
+   "stores": 0,
+   "inArea": 0,
+   "error": "no stores file",
+   "seconds": 302
+  },
+  {
+   "chain": "MESHMAT_YOSEF_1",
+   "ok": true,
+   "stores": 0,
+   "inArea": 0,
+   "error": "",
+   "seconds": 2
+  },
+  {
+   "chain": "MESHMAT_YOSEF_2",
+   "ok": true,
+   "stores": 0,
+   "inArea": 0,
+   "error": "",
+   "seconds": 3
+  },
+  {
+   "chain": "OSHER_AD",
+   "ok": true,
+   "stores": 3,
+   "inArea": 3,
+   "error": "",
+   "seconds": 17
+  },
+  {
+   "chain": "POLIZER",
+   "ok": true,
+   "stores": 0,
+   "inArea": 0,
+   "error": "",
+   "seconds": 5
+  },
+  {
+   "chain": "RAMI_LEVY",
+   "ok": true,
+   "stores": 4,
+   "inArea": 4,
+   "error": "",
+   "seconds": 18
+  },
+  {
+   "chain": "SALACH_DABACH",
+   "ok": true,
+   "stores": 0,
+   "inArea": 0,
+   "error": "",
+   "seconds": 5
+  },
+  {
+   "chain": "SHEFA_BARCART_ASHEM",
+   "ok": true,
+   "stores": 1,
+   "inArea": 1,
+   "error": "",
+   "seconds": 7
+  },
+  {
+   "chain": "SHUFERSAL",
+   "ok": true,
+   "stores": 26,
+   "inArea": 26,
+   "error": "",
+   "seconds": 23
+  },
+  {
+   "chain": "SHUK_AHIR",
+   "ok": true,
+   "stores": 3,
+   "inArea": 4,
+   "error": "",
+   "seconds": 8
+  },
+  {
+   "chain": "STOP_MARKET",
+   "ok": true,
+   "stores": 0,
+   "inArea": 0,
+   "error": "",
+   "seconds": 5
+  },
+  {
+   "chain": "SUPER_PHARM",
+   "ok": false,
+   "stores": 0,
+   "inArea": 0,
+   "error": "no stores file",
+   "seconds": 75
+  },
+  {
+   "chain": "SUPER_YUDA",
+   "ok": true,
+   "stores": 0,
+   "inArea": 0,
+   "error": "",
+   "seconds": 5
+  },
+  {
+   "chain": "SUPER_SAPIR",
+   "ok": true,
+   "stores": 0,
+   "inArea": 0,
+   "error": "",
+   "seconds": 3
+  },
+  {
+   "chain": "FRESH_MARKET_AND_SUPER_DOSH",
+   "ok": true,
+   "stores": 1,
+   "inArea": 1,
+   "error": "",
+   "seconds": 13
+  },
+  {
+   "chain": "TIV_TAAM",
+   "ok": true,
+   "stores": 3,
+   "inArea": 3,
+   "error": "",
+   "seconds": 14
+  },
+  {
+   "chain": "VICTORY_NEW_SOURCE",
+   "ok": false,
+   "stores": 0,
+   "inArea": 0,
+   "error": "no stores file",
+   "seconds": 301
+  },
+  {
+   "chain": "YELLOW",
+   "ok": true,
+   "stores": 6,
+   "inArea": 6,
+   "error": "",
+   "seconds": 22
+  },
+  {
+   "chain": "YOHANANOF",
+   "ok": true,
+   "stores": 0,
+   "inArea": 0,
+   "error": "",
+   "seconds": 5
+  },
+  {
+   "chain": "ZOL_VEBEGADOL",
+   "ok": true,
+   "stores": 0,
+   "inArea": 0,
+   "error": "",
+   "seconds": 3
+  }
+ ]
+}
